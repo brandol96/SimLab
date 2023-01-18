@@ -22,6 +22,8 @@ class Cody:
         self.parameters = dict(
             # generic stuff
             simulation=kwargs.get('simulation', 'Optimize'),
+            view_only=kwargs.get('view_only',False),
+            interactive_plot=kwargs.get('interactive_plot', False),
             method=kwargs.get('method', 'DFTB'),
             label=kwargs.get('label', 'dftb_output'),
             kpts=kwargs.get('kpts', (4, 4, 4)),
@@ -41,7 +43,6 @@ class Cody:
             # band structure stuff
             path=kwargs.get('path', 'Please Supply a Path'),
             BZ_step=kwargs.get('BZ_step', 1E-2),
-            interactive_plot=kwargs.get('interactive_plot', False),
 
             # elastic constants stuff
             maxCauchyStrain=kwargs.get('maxCauchyStrain', 0.01),
@@ -49,19 +50,20 @@ class Cody:
 
             # optical absorption stuff
             laser=kwargs.get('laser', False),
-            totalTime=kwargs.get('totalTime', 100),
-            timeStep=kwargs.get('timeStep', 0.005),
-            fieldStrength=kwargs.get('fieldStrength', 1E-3),
+            total_time=kwargs.get('total_time', 100),
+            time_step=kwargs.get('time_step', 0.005),
+            field_strength=kwargs.get('field_strength', 1E-3),
             directions=kwargs.get('directions', 'XYZ'),
-            fourierDamp=kwargs.get('fourierDamp', 10),
-            laserEnergy=kwargs.get('laserEnergy', 'PLEASE SUPPLY SOMETHING!'),
+            fourier_damp=kwargs.get('fourierDamp', 10),
+            laser_energy=kwargs.get('laser_energy', 'PLEASE SUPPLY SOMETHING!'),
+            n_points=kwargs.get('n_points',100)
         )
 
         # TODO: check-up inconsistent parameters
 
-    # TODO: define method to change initial instructions
-    def change_instruction(self, parameter):
-        pass
+    def change_instruction(self, par, new_value):
+        self.parameters[par] = new_value
+        # run re-check to ensure the user is not silly
 
     @staticmethod
     def fetch_molecule_list():
@@ -102,10 +104,18 @@ class Cody:
                         os.rename(outFile, out_path + outFile)
         print('\n##### CLEANUP DONE #####\n')
 
+    def write_parameters(self):
+        keys = self.parameters
+
+        with open('parameters.out', 'w+') as out:
+            for key in keys:
+                out.write(f'{key}: {self.parameters[key]}\n')
+
     def run(self):
         from ase.io import read
         from ase.io import write
         from SimLab.simulations import start_sim
+        from SimLab.simulations import start_view
 
         molecules = self.fetch_molecule_list()
         for molecule in molecules:
@@ -113,5 +123,12 @@ class Cody:
             mol = read(molecule)
             out_path = f'{self.parameters["simulation"]}_{self.parameters["method"]}_{mol_name}' + os.sep
 
-            start_sim(mol, mol_name, out_path, **self.parameters)
-            self.clean_files(out_path)
+            print('Simulation Start')
+
+            if self.parameters["view_only"]:
+                start_view(mol, mol_name, out_path, **self.parameters)
+            else:
+                start_sim(mol, mol_name, out_path, **self.parameters)
+                self.write_parameters()
+                self.clean_files(out_path)
+                start_view(mol, mol_name, out_path, **self.parameters)
