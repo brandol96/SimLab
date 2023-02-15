@@ -27,8 +27,7 @@ def start_sim(mol, mol_name, out_path, **kwargs):
             mol = read(f'geo_end.gen')
             mol.center()
             write(f'{method}_{mol_name}_end.traj', mol)
-
-        if simulation == 'optical':
+        elif simulation == 'optical':
             from SimLab.analysis import optical
             print(f'{method} optimization for {mol_name}')
             curr_ase_dftb_command = os.environ["ASE_DFTB_COMMAND"]
@@ -66,8 +65,6 @@ def start_sim(mol, mol_name, out_path, **kwargs):
                                       total_time, time_step, laser_energy, field_strength, n_points, directions)
                 print('\n\n')
             os.environ["ASE_DFTB_COMMAND"] = curr_ase_dftb_command
-
-
         else:
             print(f'{simulation} is not possible with {method}')
 
@@ -94,8 +91,6 @@ def start_view(mol, mol_name, out_path, **kwargs):
                 print('Some direction has pbc, the molecule is NOT valid! ( Yet :o ) \n\n')
             else:
                 print('No direction has pbc, the molecule is valid!')
-                opt_out_path = f'optimize_{method}_{mol_name}' + os.sep
-                shutil.copyfile(f'{opt_out_path}charges.bin', f'{os.getcwd()}{os.sep}charges.bin')
 
                 if not laser:
                     # the output info from kick optical simulation is the full spectra

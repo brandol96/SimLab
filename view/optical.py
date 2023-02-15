@@ -108,6 +108,7 @@ def run_kick(method, out_path, mol_name, interactive_plot, directions, laser, fo
                                                           absorption[(energsev > emin) & (energsev < emax)])))
     np.savetxt(f'{out_path}spec-nm.dat', np.column_stack((energsnm[(energsnm > wvlmin) & (energsnm < wvlmax)], \
                                                           absorption[1:][(energsnm > wvlmin) & (energsnm < wvlmax)])))
+    del energsev
 
     # read and plot the spectrum
     X, Y = read_spec_ev(out_path, x_range)
@@ -175,7 +176,7 @@ def run_laser(method, out_path, mol_name, interactive_plot, directions, laser, f
         T.append(round(V[0], 6))
         L.append(np.sqrt(V[1]**2 + V[2]**2 + V[3]**2))
 
-    plt.plot(T, L)
+    plt.plot(T, L, '-o', markersize=1.5)
     plt.grid(True)
     fig.savefig(f'{out_path}{method}_{mol_name}_laser.png')
     if interactive_plot:

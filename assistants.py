@@ -22,7 +22,7 @@ class Cody:
         self.parameters = dict(
             # generic stuff
             simulation=kwargs.get('simulation', 'Optimize'),
-            view_only=kwargs.get('view_only',False),
+            view_only=kwargs.get('view_only', False),
             interactive_plot=kwargs.get('interactive_plot', False),
             method=kwargs.get('method', 'DFTB'),
             label=kwargs.get('label', 'dftb_output'),
