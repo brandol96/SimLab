@@ -132,3 +132,6 @@ class Cody:
                 self.write_parameters()
                 self.clean_files(out_path)
                 start_view(mol, mol_name, out_path, **self.parameters)
+
+        if self.voice:
+            os.system('spd-say "It is done."')
