@@ -1,7 +1,6 @@
 # This contains the basic class of Cody, used to control all of the performed simulations
 # every folder file juggling should be places here to be done and written once.
 import os
-from mpi4py import MPI
 
 
 # noinspection PyUnresolvedReferences
@@ -17,6 +16,7 @@ class Cody:
 
         threads = kwargs.get('threads', 1)
         os.environ["OMP_NUM_THREADS"] = str(threads)
+        self.verbosity = kwargs.get('verbosity', 0)
 
         # simulation parameters
         self.parameters = dict(
@@ -39,6 +39,7 @@ class Cody:
             max_SCC_steps=kwargs.get('max_SCC_steps', 1000),
             fermi_filling=kwargs.get('fermi_filling', 0.0),
             use_LennardJones=kwargs.get('use_LennardJones', False),
+            SKFiles=kwargs.get('SKFiles', 'Please supply a choice!'),
 
             # band structure stuff
             path=kwargs.get('path', 'Please Supply a Path'),
@@ -56,7 +57,9 @@ class Cody:
             directions=kwargs.get('directions', 'XYZ'),
             fourier_damp=kwargs.get('fourierDamp', 10),
             laser_energy=kwargs.get('laser_energy', 'PLEASE SUPPLY SOMETHING!'),
-            n_points=kwargs.get('n_points',100)
+
+            # coulomb potential
+            n_points=kwargs.get('n_points', 1),
         )
 
         # TODO: check-up inconsistent parameters
@@ -77,31 +80,30 @@ class Cody:
     @staticmethod
     def clean_files(out_path):
         print('\n##### CLEANUP START ######\n')
-        if MPI.COMM_WORLD.Get_rank() == 0:
-            warning = True
-            output_list = os.listdir()
-            for outFile in output_list:
-                keep = ('.traj' in outFile and '_end.traj' not in outFile) or \
-                       '.py' in outFile or \
-                       os.path.isdir(outFile) or \
-                       'FermiLevels.out' == outFile or \
-                       'effMass.out' == outFile
+        warning = True
+        output_list = os.listdir()
+        for outFile in output_list:
+            keep = ('.traj' in outFile and '_end.traj' not in outFile) or \
+                   '.py' in outFile or \
+                   os.path.isdir(outFile) or \
+                   'FermiLevels.out' == outFile or \
+                   'effMass.out' == outFile
 
-                if os.path.isdir(out_path):
-                    if warning:
-                        print(f'rewriting contents of folder: {out_path}')
-                        warning = False
-                    if not keep:
-                        print(f'{outFile} -> {out_path}{outFile}')
-                        os.rename(outFile, out_path + outFile)
-                else:
-                    os.mkdir(out_path)
-                    if warning:
-                        print(f'\ncreating new folder: {out_path}')
-                        warning = False
-                    if not keep:
-                        print(f'{outFile} -> {out_path}{outFile}')
-                        os.rename(outFile, out_path + outFile)
+            if os.path.isdir(out_path):
+                if warning:
+                    print(f'rewriting contents of folder: {out_path}')
+                    warning = False
+                if not keep:
+                    print(f'{outFile} -> {out_path}{outFile}')
+                    os.rename(outFile, out_path + outFile)
+            else:
+                os.mkdir(out_path)
+                if warning:
+                    print(f'\ncreating new folder: {out_path}')
+                    warning = False
+                if not keep:
+                    print(f'{outFile} -> {out_path}{outFile}')
+                    os.rename(outFile, out_path + outFile)
         print('\n##### CLEANUP DONE #####\n')
 
     def write_parameters(self):
@@ -116,6 +118,10 @@ class Cody:
         from ase.io import write
         from SimLab.simulations import start_sim
         from SimLab.simulations import start_view
+
+        if self.verbosity > 1:
+            curr_ase_dftb_command = os.environ["ASE_DFTB_COMMAND"]
+            os.environ["ASE_DFTB_COMMAND"] = "dftb+ | tee PREFIX.out"
 
         molecules = self.fetch_molecule_list()
         for molecule in molecules:
@@ -135,3 +141,6 @@ class Cody:
 
         if self.voice:
             os.system('spd-say "It is done."')
+
+        if self.verbosity > 1:
+            os.environ["ASE_DFTB_COMMAND"] = curr_ase_dftb_command

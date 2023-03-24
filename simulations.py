@@ -10,10 +10,13 @@ def start_sim(mol, mol_name, out_path, **kwargs):
     method = kwargs.get('method')
 
     if method == 'DFTB':
+        SKFiles = kwargs.get('SKFiles')
+        os.environ["DFTB_PREFIX"] = f"/home/rbrandolt/dftb21/SKfiles/{SKFiles}"
         if simulation == 'optimize':
             from SimLab.calculator import fetch_dftb_calc
             print(f'{method} optimization for {mol_name}')
             pbc = mol.get_pbc()
+
             if True in pbc:
                 print('Some direction has pbc, set "lattice_opt = True" to optimize the unit cell')
                 dftb = fetch_dftb_calc(mol, cluster=False, **kwargs)
@@ -27,6 +30,8 @@ def start_sim(mol, mol_name, out_path, **kwargs):
             mol = read(f'geo_end.gen')
             mol.center()
             write(f'{method}_{mol_name}_end.traj', mol)
+
+
         elif simulation == 'optical':
             from SimLab.analysis import optical
             print(f'{method} optimization for {mol_name}')

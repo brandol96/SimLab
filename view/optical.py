@@ -1,10 +1,6 @@
-import os
-import numpy
 from scipy import linalg, constants
 import matplotlib.pyplot as plt
 import numpy as np
-from ase.io import read
-from mpi4py import MPI
 
 
 def read_spec_ev(path, x_range):

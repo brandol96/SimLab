@@ -1,9 +1,3 @@
-import os
-import shutil
-from mpi4py import MPI
-from ase.io import read
-
-
 def get_grid_origin(mol,n_points):
     A_to_Hr = 0.188972598857892E+01
     positions = mol.get_positions()
