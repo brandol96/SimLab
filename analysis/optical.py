@@ -1,4 +1,4 @@
-def get_grid_origin(mol,n_points):
+def get_grid_origin(mol, n_points):
     A_to_Hr = 0.188972598857892E+01
     positions = mol.get_positions()
     X = []
@@ -8,10 +8,10 @@ def get_grid_origin(mol,n_points):
         X.append(v[0])
         Y.append(v[1])
         Z.append(v[2])
-    grid_O = [min(X)*A_to_Hr, min(Y)*A_to_Hr, min(Z)*A_to_Hr]
-    grid_S = [(max(X)-min(X))*A_to_Hr/n_points,
-              (max(Y)-min(Y))*A_to_Hr/n_points,
-              (max(Z)-min(Z))*A_to_Hr/n_points]
+    grid_O = [min(X) * A_to_Hr, min(Y) * A_to_Hr, min(Z) * A_to_Hr]
+    grid_S = [(max(X) - min(X)) * A_to_Hr / n_points,
+              (max(Y) - min(Y)) * A_to_Hr / n_points,
+              (max(Z) - min(Z)) * A_to_Hr / n_points]
     return grid_O, grid_S
 
 
@@ -69,13 +69,13 @@ def run_laser(mol, max_SCC, max_SCC_steps, fermi_filling,
     electron_dynamics += f'\nPerturbation = Laser {{ \nPolarizationDirection = {laser_pol}'
     electron_dynamics += f'\nLaserEnergy [eV] ={laser_energy} }}'
     electron_dynamics += f'\nFieldStrength [V/A] = {field_strength}'
-    electron_dynamics += f'\nWriteFrequency = 20'
+    electron_dynamics += f'\nWriteFrequency = 10'
     # electron_dynamics += f'\nIonDynamics = Yes'
     # electron_dynamics += f'\nInitialTemperature [K] = 0.0'
     # electron_dynamics += f'\nPopulations = Yes'
     electron_dynamics += f'\nWriteEnergyAndCharges = Yes}}'
 
-    grid_O, grid_S = get_grid_origin(mol,n_points)
+    grid_O, grid_S = get_grid_origin(mol, n_points)
     optical = Dftb(atoms=mol,
                    label=f'optical_laser_{direction[0]}{direction[1]}{direction[2]}',
                    Hamiltonian_SCC='Yes',
@@ -96,6 +96,37 @@ def run_laser(mol, max_SCC, max_SCC_steps, fermi_filling,
                    Analysis_ElectrostaticPotential_Grid_Directions='1 0 0 0 1 0 0 0 1',
                    Options_='',
                    Options_WriteChargesAsText='Yes')
-
     # run calculation through DFTB+ implemented routines
     optical.calculate(mol)
+
+
+def run_casida(mol, max_SCC, max_SCC_steps, fermi_filling,
+               n_excitations, cutoff_energy, cutoff_oscillator):
+    from ase.calculators.dftb import Dftb
+
+    Casida  = '\nNrOfExcitations = 200'
+    Casida += '\nSymmetry = singlet'
+    Casida += '\nDiagonaliser = Arpack{}'
+    optical = Dftb(atoms=mol,
+                   label=f'optical_casida',
+                   Hamiltonian_SCC='Yes',
+                   Hamiltonian_SCCTolerance=max_SCC,
+                   Hamiltonian_ReadInitialCharges='Yes',
+                   Hamiltonian_MaxSCCIterations=max_SCC_steps,
+                   Hamiltonian_Filling=f"Fermi{{Temperature [K] = {fermi_filling} }}",
+                   Hamiltonian_Mixer_='Anderson',
+                   Hamiltonian_Mixer_MixingParameter=5.000000000000000E-002,
+                   Hamiltonian_Mixer_Generations=8,
+                   ExcitedState_='',
+                   ExcitedState_Casida_='',
+                   ExcitedState_Casida_NrOfExcitations=n_excitations,
+                   #ExcitedState_Casida_EnergyWindow=cutoff_energy,
+                   #ExcitedState_Casida_OscillatorWindow=cutoff_oscillator,
+                   ExcitedState_Casida_Symmetry='singlet',
+                   ExcitedState_Casida_Diagonaliser='Arpack{}',
+                   Options_='',
+                   Options_WriteChargesAsText='Yes')
+    # run calculation through DFTB+ implemented routines
+    optical.calculate(mol)
+
+

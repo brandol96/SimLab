@@ -15,7 +15,7 @@ def read_spec_ev(path, x_range):
     return x, y
 
 
-def run_kick(method, out_path, mol_name, interactive_plot, directions, laser, fourier_damp, field_strength):
+def run_kick(method, out_path, mol_name, interactive_plot, directions, fourier_damp, field_strength):
     # a few parameters
     zoom = 6
     title_font = 20
@@ -155,7 +155,7 @@ def run_kick(method, out_path, mol_name, interactive_plot, directions, laser, fo
         plt.clf()
 
 
-def run_laser(method, out_path, mol_name, interactive_plot, directions, laser, fourier_damp, field_strength):
+def run_laser(method, out_path, mol_name, interactive_plot):
     # a few parameters
     zoom = 6
     title_font = 20
@@ -175,6 +175,76 @@ def run_laser(method, out_path, mol_name, interactive_plot, directions, laser, f
     plt.plot(T, L, '-o', markersize=1.5)
     plt.grid(True)
     fig.savefig(f'{out_path}{method}_{mol_name}_laser.png')
+    if interactive_plot:
+        plt.show()
+    else:
+        plt.clf()
+
+
+def read_casida(out_path, cutoff_OscStr, cutoff_weight, energy_upper_plot):
+    energies = []
+    transitions = []
+
+    with open(f'{out_path}EXC.DAT') as casida:
+        for line in casida:
+            data = line.split()
+            if '->' in data:
+                energy = float(data[0])
+                weight = float(data[5])
+                oscilator = float(data[1])
+                if 0.5 <= energy <= energy_upper_plot: # TODO:think of something better to select range
+                    if weight >= cutoff_weight and oscilator >= cutoff_OscStr:
+                        energies.append(energy)
+                        transitions.append([int(data[2]), int(data[4])])
+    return energies, transitions
+
+
+def run_casida(method, out_path, mol_name, cutoff_OscStr, cutoff_weight,
+               interactive_plot, energy_upper_plot):
+    # a few parameters
+    zoom = 6
+    title_font = 20
+    label_font = 16
+    text_font = 14
+
+    fig = plt.figure()  # start a figure
+    fig.suptitle(mol_name.replace("_", " "), fontsize=title_font)
+
+    energies, transitions = read_casida(out_path, cutoff_OscStr, cutoff_weight, energy_upper_plot)
+
+    # get plot range from casida results
+    x_range = [0.0, 1.2*energy_upper_plot]
+    X, Y = read_spec_ev(out_path, x_range)
+
+    # plot casida lines
+    from SimLab.utils import nearest_index
+    prev_energy = 0.0
+    padding = 1.5
+    print(mol_name)
+    for energy, transition in zip(energies,transitions):
+        i = nearest_index(X, energy)
+
+        # get line joining two adjacent points
+        if energy <= X[i]:
+            a = (Y[i]-Y[i-1])/(X[i]-X[i-1])
+        if energy > X[i]:
+            a = (Y[i+1]-Y[i])/(X[i+1]-X[i])
+        b = Y[i] - a*X[i]
+        h = a*energy + b
+        plt.plot([energy, energy], [0, h], color='red')
+#        plt.plot(energy, h, 'o', color='red')#, markersize=1)
+        if prev_energy/energy >= .9:
+            padding -= 1.5
+        else:
+            padding = 0.0
+#        plt.text(energy+0.01, Y[i] + padding, f'{transition[0]} -> {transition[1]}')
+        prev_energy = energy
+        print(energy, transition)
+
+    plt.plot(X, Y)
+    plt.axis([0.5, energy_upper_plot, 0.0, max(Y)])
+    plt.grid(True)
+    fig.savefig(f'{out_path}{method}_{mol_name}_Casida.png')
     if interactive_plot:
         plt.show()
     else:

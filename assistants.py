@@ -31,6 +31,7 @@ class Cody:
             fix_angles=kwargs.get('fix_angles', False),
             fix_lengths=kwargs.get('fix_lengths', [False, False, False]),
             max_force=kwargs.get('max_force', 1E-4),
+            time_step=kwargs.get('time_step', 0.005),
 
             # DFTB stuff
             max_driver_steps=kwargs.get('max_driver_steps', 10000),
@@ -41,22 +42,34 @@ class Cody:
             use_LennardJones=kwargs.get('use_LennardJones', False),
             SKFiles=kwargs.get('SKFiles', 'Please supply a choice!'),
 
+            # MD stuff
+            thermostat=kwargs.get('thermostat', 'NVE'),
+            temp_profile=kwargs.get('temp_profile', None),
+
             # band structure stuff
-            path=kwargs.get('path', 'Please Supply a Path'),
+            BZ_path=kwargs.get('BZ_path', 'Please Supply a Path'),
             BZ_step=kwargs.get('BZ_step', 1E-2),
+            bands_zoom=kwargs.get('bands_zoom', -1),
 
             # elastic constants stuff
             maxCauchyStrain=kwargs.get('maxCauchyStrain', 0.01),
             totalCauchySteps=kwargs.get('totalCauchySteps', 10),
 
             # optical absorption stuff
-            laser=kwargs.get('laser', False),
+            sim_type=kwargs.get('sim_type', None), # I might use this parameter as generic
+                                                   # to point at various methods of the same
+                                                   # "kind" of simulation
             total_time=kwargs.get('total_time', 100),
-            time_step=kwargs.get('time_step', 0.005),
+            n_excitations=kwargs.get('n_excitations', 20),
             field_strength=kwargs.get('field_strength', 1E-3),
             directions=kwargs.get('directions', 'XYZ'),
             fourier_damp=kwargs.get('fourierDamp', 10),
             laser_energy=kwargs.get('laser_energy', 'PLEASE SUPPLY SOMETHING!'),
+            cutoff_energy=kwargs.get('cutoff_energy', 30),
+            cutoff_osc=kwargs.get('cutoff_osc', 0.000001),
+            cutoff_OscStr=kwargs.get('cutoff_OscStr', 0.001),
+            cutoff_weight=kwargs.get('cutoff_weight', 0.8),
+            energy_upper_plot=kwargs.get('energy_upper_plot', 2.0),
 
             # coulomb potential
             n_points=kwargs.get('n_points', 1),

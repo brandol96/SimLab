@@ -62,10 +62,11 @@ def fetch_dftb_calc(mol, cluster, **kwargs):
                         Hamiltonian_Dispersion='LennardJones{Parameters = UFFParameters{}}',
                         Hamiltonian_ReadInitialCharges='Yes',
                         Analysis_='',
+                        Analysis_WriteEigenvectors='Yes',
                         Analysis_ElectrostaticPotential_='',
                         Analysis_ElectrostaticPotential_OutputFile=f'potential_optimize.out',
                         Analysis_ElectrostaticPotential_AppendFile='Yes',
-                        Analysis_ElectrostaticPotential_Softening='0.00001',
+                        Analysis_ElectrostaticPotential_Softening='0.01',
                         Analysis_ElectrostaticPotential_Grid_='',
                         Analysis_ElectrostaticPotential_Grid_Spacing=f'{grid_S[0]} {grid_S[1]} {grid_S[1]}',
                         Analysis_ElectrostaticPotential_Grid_Origin=f'{grid_O[0]} {grid_O[1]} {grid_O[2]}',
@@ -73,6 +74,7 @@ def fetch_dftb_calc(mol, cluster, **kwargs):
                         Analysis_ElectrostaticPotential_Grid_Directions='1 0 0 0 1 0 0 0 1',
                         Options_='',
                         Options_ReadChargesAsText='Yes',
+                        Options_WriteDetailedXml='Yes',
                         )
         else:
             calc = Dftb(label=label,
@@ -87,10 +89,11 @@ def fetch_dftb_calc(mol, cluster, **kwargs):
                         Hamiltonian_Filling=f"Fermi{{Temperature [K] = {fermi_filling} }}",
                         Hamiltonian_ReadInitialCharges='Yes',
                         Analysis_='',
+                        Analysis_WriteEigenvectors='Yes',
                         Analysis_ElectrostaticPotential_='',
                         Analysis_ElectrostaticPotential_OutputFile=f'potential_optimize.out',
                         Analysis_ElectrostaticPotential_AppendFile='Yes',
-                        Analysis_ElectrostaticPotential_Softening='0.00001',
+                        Analysis_ElectrostaticPotential_Softening='0.01',
                         Analysis_ElectrostaticPotential_Grid_='',
                         Analysis_ElectrostaticPotential_Grid_Spacing=f'{grid_S[0]} {grid_S[1]} {grid_S[1]}',
                         Analysis_ElectrostaticPotential_Grid_Origin=f'{grid_O[0]} {grid_O[1]} {grid_O[2]}',
@@ -98,6 +101,7 @@ def fetch_dftb_calc(mol, cluster, **kwargs):
                         Analysis_ElectrostaticPotential_Grid_Directions='1 0 0 0 1 0 0 0 1',
                         Options_='',
                         Options_ReadChargesAsText='Yes',
+                        Options_WriteDetailedXml='Yes',
                         )
     else:
         if use_LennardJones:
@@ -118,10 +122,11 @@ def fetch_dftb_calc(mol, cluster, **kwargs):
                         Hamiltonian_Dispersion='LennardJones{Parameters = UFFParameters{}}',
                         Hamiltonian_ReadInitialCharges='Yes',
                         Analysis_='',
+                        Analysis_WriteEigenvectors='Yes',
                         Analysis_ElectrostaticPotential_='',
                         Analysis_ElectrostaticPotential_OutputFile=f'potential_optimize.out',
                         Analysis_ElectrostaticPotential_AppendFile='Yes',
-                        Analysis_ElectrostaticPotential_Softening='0.00001',
+                        Analysis_ElectrostaticPotential_Softening='0.01',
                         Analysis_ElectrostaticPotential_Grid_='',
                         Analysis_ElectrostaticPotential_Grid_Spacing=f'{grid_S[0]} {grid_S[1]} {grid_S[1]}',
                         Analysis_ElectrostaticPotential_Grid_Origin=f'{grid_O[0]} {grid_O[1]} {grid_O[2]}',
@@ -129,6 +134,7 @@ def fetch_dftb_calc(mol, cluster, **kwargs):
                         Analysis_ElectrostaticPotential_Grid_Directions='1 0 0 0 1 0 0 0 1',
                         Options_='',
                         Options_ReadChargesAsText='Yes',
+                        Options_WriteDetailedXml='Yes',
                         )
         else:
             calc = Dftb(label=label,
@@ -147,10 +153,11 @@ def fetch_dftb_calc(mol, cluster, **kwargs):
                         Hamiltonian_ReadInitialCharges='Yes',
                         Hamiltonian_Filling=f"Fermi{{Temperature [K] = {fermi_filling} }}",
                         Analysis_='',
+                        Analysis_WriteEigenvectors='Yes',
                         Analysis_ElectrostaticPotential_='',
                         Analysis_ElectrostaticPotential_OutputFile=f'potential_optimize.out',
                         Analysis_ElectrostaticPotential_AppendFile='Yes',
-                        Analysis_ElectrostaticPotential_Softening='0.00001',
+                        Analysis_ElectrostaticPotential_Softening='0.01',
                         Analysis_ElectrostaticPotential_Grid_='',
                         Analysis_ElectrostaticPotential_Grid_Spacing=f'{grid_S[0]} {grid_S[1]} {grid_S[1]}',
                         Analysis_ElectrostaticPotential_Grid_Origin=f'{grid_O[0]} {grid_O[1]} {grid_O[2]}',
@@ -158,5 +165,6 @@ def fetch_dftb_calc(mol, cluster, **kwargs):
                         Analysis_ElectrostaticPotential_Grid_Directions='1 0 0 0 1 0 0 0 1',
                         Options_='',
                         Options_ReadChargesAsText='Yes',
+                        Options_WriteDetailedXml='Yes',
                         )
     return calc
