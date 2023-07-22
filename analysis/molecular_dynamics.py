@@ -6,8 +6,12 @@ def highest_mode():
                 search_flag = True
             if search_flag:
                 if line != '\n':
+                    # TODO: gotta fix this! it's not allways possible to split linesin modes.out by blank spaces
                     data = line.split()
-                    vib_mode = data[1]
+                    try:
+                        vib_mode = data[1]
+                    except:
+                        print('erro in line format in modes.out')
                 else:
                     return vib_mode
 
@@ -25,7 +29,10 @@ def run(mol, mol_name, kpts, thermostat, temp_profile, time_step,
     # write temperatureProfile
     TempProfileTxt = 'TemperatureProfile {\n'
     for i in range(len(temp_profile)):
-        TempProfileTxt += f'{temp_profile[i][0]}    {temp_profile[i][1]}     {temp_profile[i][2]}\n'
+        temp_change = temp_profile[i][0]
+        temp_step = int(temp_profile[i][1])
+        temp_value = float(temp_profile[i][2])*0.316681534524639E-05
+        TempProfileTxt += f'{temp_change}    {temp_step}     {temp_value}\n'
     TempProfileTxt += '\n}\n'
 
     pbc = mol.get_pbc()
@@ -55,6 +62,7 @@ def run(mol, mol_name, kpts, thermostat, temp_profile, time_step,
         # TODO: modes calculation can be place independently from MD into simulations.py
         # BTW EVERYTHING BEYOND THIS POINT IS UGLY! PLEASE LOOK AWAY!
         modes = Dftb(atoms=mol,
+                     label='hessian_run',
                      Driver_="SecondDerivatives",
                      Driver_Delta='1E-4',
                      Hamiltonian_SCC='Yes',
@@ -90,6 +98,7 @@ def run(mol, mol_name, kpts, thermostat, temp_profile, time_step,
         TempProfileTxt+=f'CouplingStrength [cm^-1] = {vib_mode_freq}\n'
 
         md.set(Driver_="VelocityVerlet",
+               label='NVT_run.out',
                Driver_OutputPrefix='NVT',
                Driver_MovedAtoms='1:-1',
                Driver_MDRestartFrequency='10',

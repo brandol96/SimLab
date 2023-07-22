@@ -137,6 +137,7 @@ class Cody:
             os.environ["ASE_DFTB_COMMAND"] = "dftb+ | tee PREFIX.out"
 
         molecules = self.fetch_molecule_list()
+        molecules.sort()
         for molecule in molecules:
             mol_name = os.path.splitext(os.path.basename(molecule))[0]
             mol = read(molecule)
