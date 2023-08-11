@@ -5,6 +5,7 @@ from SimLab.utils import read_dos_dftb
 from SimLab.utils import read_fermi_levels_dftb
 from SimLab.utils import output_fermi_levels_dftb
 
+
 def run_dftb(mol, mol_name, out_path, zoom, path, dK,
              interactive_plot):
     band_data = np.genfromtxt(f'{out_path}{mol_name}.band_tot.dat')
@@ -33,7 +34,7 @@ def run_dftb(mol, mol_name, out_path, zoom, path, dK,
         band_data[i][1:] = band_data[i][1:] - fermi_e
     for i in range(len(dos)):
         ene[i] = ene[i] - fermi_e
-#    fermi_e = 0
+    #    fermi_e = 0
 
     # setup figure
     fig = plt.figure(1, figsize=(8, 10))  # start a figure
@@ -80,7 +81,7 @@ def run_dftb(mol, mol_name, out_path, zoom, path, dK,
     # I'll just exploit this to plot the lines the first letter in 'path'
     # will allways be the first point in the 'dftb_path' entry and so on...
 
-    path_len = len(data)-1 # my code generates and extra '\n' at the end
+    path_len = len(data) - 1  # my code generates and extra '\n' at the end
     position = 0
     for i in range(path_len):
         point = path[i]

@@ -32,6 +32,7 @@ class Cody:
             fix_lengths=kwargs.get('fix_lengths', [False, False, False]),
             max_force=kwargs.get('max_force', 1E-4),
             time_step=kwargs.get('time_step', 0.005),
+            dos_range=kwargs.get('dos_range', 100),
 
             # DFTB stuff
             max_driver_steps=kwargs.get('max_driver_steps', 10000),

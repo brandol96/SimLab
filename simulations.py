@@ -137,10 +137,11 @@ def start_view(mol, mol_name, out_path, **kwargs):
         if simulation == 'optimize':
             from SimLab.view import DOS
             pbc = mol.get_pbc()
+            dos_range = kwargs.get('dos_range')
             if True in pbc:
-                print('Some direction has pbc, set "simulation = bands" to view band structure')
+                print('Some direction has pbc, set "simulation = bands" to view band structure and DOS')
             else:
-                DOS.run_dftb(mol, mol_name, out_path, interactive_plot)
+                DOS.run_dftb(mol, mol_name, out_path, interactive_plot, dos_range)
 
         if simulation == 'bands':
             from SimLab.view import bands

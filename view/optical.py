@@ -80,7 +80,7 @@ def run_kick(method, out_path, mol_name, interactive_plot, directions, fourier_d
         mu_matrix[2, 1] = mu[:, 2]
         mu_matrix[2, 2] = mu[:, 3]
         d += 1
-    #some constants
+    # some constants
     hplanck = constants.physical_constants['Planck constant in eV s'][0] * 1.0E15
     cspeednm = constants.speed_of_light * 1.0e9 / 1.0e15
 
@@ -136,7 +136,7 @@ def run_kick(method, out_path, mol_name, interactive_plot, directions, fourier_d
                 alfa[i, j] = specs[i, j, idx]
         w, v = linalg.eig(alfa)
         maxidx = np.argmax(w)
-        pol_vector = (v[:,maxidx])
+        pol_vector = (v[:, maxidx])
         X_pol.append(pol_vector[0])
         Y_pol.append(pol_vector[1])
         Z_pol.append(pol_vector[2])
@@ -145,7 +145,7 @@ def run_kick(method, out_path, mol_name, interactive_plot, directions, fourier_d
     # output csv using internal SimLab routine
     from SimLab.utils import write_csv
     file_name = f'{mol_name}_peaks_ev'
-    write_csv(out_path, file_name, Energy=X_peaks, Absorption=Y_peaks,Pol_X=X_pol,Pol_Y=Y_pol,Pol_Z=Z_pol)
+    write_csv(out_path, file_name, Energy=X_peaks, Absorption=Y_peaks, Pol_X=X_pol, Pol_Y=Y_pol, Pol_Z=Z_pol)
 
     plt.grid(True)
     fig.savefig(f'{out_path}{method}_{mol_name}_Optical.png')
@@ -170,7 +170,7 @@ def run_laser(method, out_path, mol_name, interactive_plot):
     L = []
     for V in mu:
         T.append(round(V[0], 6))
-        L.append(np.sqrt(V[1]**2 + V[2]**2 + V[3]**2))
+        L.append(np.sqrt(V[1] ** 2 + V[2] ** 2 + V[3] ** 2))
 
     plt.plot(T, L, '-o', markersize=1.5)
     plt.grid(True)
@@ -192,7 +192,7 @@ def read_casida(out_path, cutoff_OscStr, cutoff_weight, energy_upper_plot):
                 energy = float(data[0])
                 weight = float(data[5])
                 oscilator = float(data[1])
-                if 0.5 <= energy <= energy_upper_plot: # TODO:think of something better to select range
+                if 0.5 <= energy <= energy_upper_plot:  # TODO:think of something better to select range
                     if weight >= cutoff_weight and oscilator >= cutoff_OscStr:
                         energies.append(energy)
                         transitions.append([int(data[2]), int(data[4])])
@@ -213,7 +213,7 @@ def run_casida(method, out_path, mol_name, cutoff_OscStr, cutoff_weight,
     energies, transitions = read_casida(out_path, cutoff_OscStr, cutoff_weight, energy_upper_plot)
 
     # get plot range from casida results
-    x_range = [0.0, 1.2*energy_upper_plot]
+    x_range = [0.0, 1.2 * energy_upper_plot]
     X, Y = read_spec_ev(out_path, x_range)
 
     # plot casida lines
@@ -221,23 +221,23 @@ def run_casida(method, out_path, mol_name, cutoff_OscStr, cutoff_weight,
     prev_energy = 0.0
     padding = 1.5
     print(mol_name)
-    for energy, transition in zip(energies,transitions):
+    for energy, transition in zip(energies, transitions):
         i = nearest_index(X, energy)
 
         # get line joining two adjacent points
         if energy <= X[i]:
-            a = (Y[i]-Y[i-1])/(X[i]-X[i-1])
+            a = (Y[i] - Y[i - 1]) / (X[i] - X[i - 1])
         if energy > X[i]:
-            a = (Y[i+1]-Y[i])/(X[i+1]-X[i])
-        b = Y[i] - a*X[i]
-        h = a*energy + b
+            a = (Y[i + 1] - Y[i]) / (X[i + 1] - X[i])
+        b = Y[i] - a * X[i]
+        h = a * energy + b
         plt.plot([energy, energy], [0, h], color='red')
-#        plt.plot(energy, h, 'o', color='red')#, markersize=1)
-        if prev_energy/energy >= .9:
+        #        plt.plot(energy, h, 'o', color='red')#, markersize=1)
+        if prev_energy / energy >= .9:
             padding -= 1.5
         else:
             padding = 0.0
-#        plt.text(energy+0.01, Y[i] + padding, f'{transition[0]} -> {transition[1]}')
+        #        plt.text(energy+0.01, Y[i] + padding, f'{transition[0]} -> {transition[1]}')
         prev_energy = energy
         print(energy, transition)
 

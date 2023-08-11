@@ -137,6 +137,7 @@ def read_fermi_levels_dftb(path, mol_name):
     print(f'{mol_name:<15} {homo_string:>20} {lumo_string:>20} {gap:<3} {fermi_e:<3}')
     return homo, lumo, gap, fermi_e
 
+
 def output_fermi_levels_dftb(mol_name, homo, lumo, fermi_energy, gap):
     import os
     try:
