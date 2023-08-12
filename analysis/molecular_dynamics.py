@@ -2,18 +2,14 @@ def highest_mode():
     search_flag = False
     with open('modes.out') as modes_file:
         for line in modes_file:
-            if '(cm-1)' in line:
+            if 'cm-1' in line:
                 search_flag = True
             if search_flag:
-                if line != '\n':
-                    # TODO: gotta fix this! it's not allways possible to split linesin modes.out by blank spaces
+                data = line.split()
+                if len(data)==2:
                     data = line.split()
-                    try:
-                        vib_mode = data[1]
-                    except:
-                        print('erro in line format in modes.out')
-                else:
-                    return vib_mode
+                    vib_mode = data[1]
+        return vib_mode
 
 
 def run(mol, mol_name, kpts, thermostat, temp_profile, time_step,
@@ -85,12 +81,12 @@ def run(mol, mol_name, kpts, thermostat, temp_profile, time_step,
         import numpy as np
         print('USING MODES CODE! REMEMBER TO CHANGE SKFILES PATH IN THE UGLY FOLDER!!!!')
         print('or do something about it ffs...')
-        source = '/home/rbrandolt/custom-site-packages/SimLab/ugly_solutions/modes_in.hsd'
+        source = '/home/rbrandolt/python-libs/SimLab/ugly_solutions/modes_in.hsd'
         destination = os.getcwd()
         shutil.copy(source, destination)
         os.system('modes > modes.out')
         vib_mode_freq = highest_mode()
-        print(vib_mode_freq)
+        print(f'found frequency: {vib_mode_freq} cm-1')
 
         # bellow is a solution to inserting the desired unit [cm-1]
         # in the declaration of coupling strength

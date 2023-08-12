@@ -10,7 +10,7 @@ DisplayModes = {
 
 # You need to specify the SK-files, as the mass of the elements is needed
 SlaterKosterFiles = Type2FileNames {
-  Prefix = "/home/rbrandolt/dftb21/SKfiles/mio-1-1/"
+  Prefix = "/home/rbrandolt/dftb-23.1/skfiles/mio-1-1/"
   Separator = "-"
   Suffix = ".skf"
 }
