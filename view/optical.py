@@ -181,24 +181,6 @@ def run_laser(method, out_path, mol_name, interactive_plot):
         plt.clf()
 
 
-def read_casida(out_path, cutoff_OscStr, cutoff_weight, energy_upper_plot):
-    energies = []
-    transitions = []
-
-    with open(f'{out_path}EXC.DAT') as casida:
-        for line in casida:
-            data = line.split()
-            if '->' in data:
-                energy = float(data[0])
-                weight = float(data[5])
-                oscilator = float(data[1])
-                if 0.5 <= energy <= energy_upper_plot:  # TODO:think of something better to select range
-                    if weight >= cutoff_weight and oscilator >= cutoff_OscStr:
-                        energies.append(energy)
-                        transitions.append([int(data[2]), int(data[4])])
-    return energies, transitions
-
-
 def run_casida(method, out_path, mol_name, cutoff_OscStr, cutoff_weight,
                interactive_plot, energy_upper_plot):
     # a few parameters
@@ -244,6 +226,149 @@ def run_casida(method, out_path, mol_name, cutoff_OscStr, cutoff_weight,
     plt.plot(X, Y)
     plt.axis([0.5, energy_upper_plot, 0.0, max(Y)])
     plt.grid(True)
+    fig.savefig(f'{out_path}{method}_{mol_name}_Casida.png')
+    if interactive_plot:
+        plt.show()
+    else:
+        plt.clf()
+
+
+def read_casida(out_path, X_peaks, cutoff_OscStr, cutoff_weight, energy_upper_plot):
+    energies = []
+    transitions = []
+    casida_list = []
+
+    with open(f'{out_path}EXC.DAT') as casida:
+        for line in casida:
+            data = line.split()
+            if '->' in data:
+                energy = float(data[0])
+                weight = float(data[5])
+                oscilator = float(data[1])
+                transition = [int(data[2]), int(data[4])]
+                casida_list.append([energy, transition, weight, oscilator])
+                if energy > energy_upper_plot:
+                    break
+                else:
+                    if weight >= cutoff_weight and oscilator >= cutoff_OscStr:
+                        energies.append(energy)
+                        transitions.append(transition)
+                        print(f'{energy},{transition},{weight},{oscilator}',
+                              file=open(f'{out_path}casida_filtered.out', 'a'))
+
+    with open(f'{out_path}casida_peaks.out','w+') as out_file:
+        for peak in X_peaks:
+            i = 0
+            for energy, transition, weight, oscilator in casida_list:
+                if energy > peak:
+                    out_file.write(f'\npeak center: {peak:.3f}\n')
+                    out_file.write('energy,transition,weight,oscilator\n')
+                    aux = casida_list[i-3:i+3]
+                    for entry in aux:
+                        out_file.write(f'{entry[0]:.3f},{entry[1]},{entry[2]:.3f},{entry[3]:.8f}\n')
+                    break
+                i += 1
+
+    return energies, transitions
+
+
+def run_casida_pure(method, out_path, mol_name,
+                    cutoff_OscStr, cutoff_weight, energy_upper_plot,
+                    interactive_plot):
+    import os
+    # set here broadening parameter
+    gamma = 0.2
+    # set here spin contamination threshold
+    spin_cont = 0.5
+
+    # constants
+    pi = 3.141592654
+    C = 0.000035
+
+    # a few parameters
+    zoom = 6
+    title_font = 20
+    label_font = 16
+    text_font = 14
+
+    fig = plt.figure(figsize=(10, 10), dpi=80)  # start a figure
+    fig.suptitle(mol_name.replace("_", " "), fontsize=title_font)
+    ax = plt.gca()
+
+    # spec following the dftb+ recipe
+    exc_dat = os.path.join(f'{out_path}EXC.DAT')
+    output = open(exc_dat, "r")
+    data = output.readlines()
+    output.close()
+
+    closed_shell = False
+    if 'Sym.' in data[1]:
+        closed_shell = True
+
+    ener = []
+    osc = []
+    for line in data[5:]:
+        line_split = line.split()
+        if (closed_shell):
+            ener.append(float(line_split[0]))
+            osc.append(float(line_split[1]))
+        else:
+            if absolute(float(line_split[7])) < spin_cont:
+                ener.append(float(line_split[0]))
+                osc.append(float(line_split[1]))
+
+    wstart = int(ener[0])
+    wend = int(ener[-1]) + 1
+    deltaw = 0.01
+    npoint = int((wend - wstart) / deltaw)
+
+    w = wstart
+    X = []
+    Y = []
+    for j in range(1, npoint):
+        absolute = 0.0
+        for i in range(len(ener)):
+            absolute = absolute + 0.5 * osc[i] * gamma / (C * pi * ((w - ener[i]) ** 2 + 0.25 * gamma ** 2))
+        print("{:.2f}".format(w), "{:.2f}".format(absolute),
+              file=open(f'{out_path}casida_spec.DAT', 'a'))
+        # TODO: this 'a' append mode creates copies of the spectra each run, I have to change this someday
+        X.append(w)
+        Y.append(absolute)
+        w = w + deltaw
+    ax.plot(X, Y)
+
+    # get and plot peaks along with their transitions
+    # we want to evaluate where are the peaks to save their absorption and
+    # calculate their maximum pol. direction
+    N = len(Y)
+    X_peaks = []
+    Y_peaks = []
+    for n in range(1, N - 1):
+        if Y[n] > Y[n - 1] and Y[n] > Y[n + 1]:
+            X_peaks.append(X[n])
+            Y_peaks.append(Y[n])
+    i = 0
+    for ene, abs in zip(X_peaks, Y_peaks):
+        if ene < energy_upper_plot:
+            i+=1
+            ax.plot([ene, ene], [0, abs], color='red', label=f'({i}) Transition Energy = {ene:.3f}\n\n')
+            plt.text(ene - 0.05, abs+500, f'({i})')
+
+    # with peaks in hand, let's find the transitions of these peaks
+    # call this function to create filtered.DAT of casida spec
+    # based on given parameters "cutoff_weight" and "cutoff_OscStr"
+    read_casida(out_path, X_peaks, cutoff_OscStr, cutoff_weight, energy_upper_plot)
+
+    plt.xlim([0.0, energy_upper_plot])
+    ax.set_yticklabels([])
+    ax.set_xlabel('Energy [eV]',fontsize=20)
+    plt.grid(True)
+    plt.tight_layout()
+
+    leg = ax.legend(handlelength=0, handletextpad=0, fancybox=True)
+    for item in leg.legendHandles:
+        item.set_visible(False)
+
     fig.savefig(f'{out_path}{method}_{mol_name}_Casida.png')
     if interactive_plot:
         plt.show()

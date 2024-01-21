@@ -33,6 +33,7 @@ class Cody:
             max_force=kwargs.get('max_force', 1E-4),
             time_step=kwargs.get('time_step', 0.005),
             dos_range=kwargs.get('dos_range', 100),
+            verbosity=kwargs.get('verbosity', 0),
 
             # DFTB stuff
             max_driver_steps=kwargs.get('max_driver_steps', 10000),
@@ -42,6 +43,7 @@ class Cody:
             fermi_filling=kwargs.get('fermi_filling', 0.0),
             use_LennardJones=kwargs.get('use_LennardJones', False),
             SKFiles=kwargs.get('SKFiles', 'Please supply a choice!'),
+            target_orbirals=kwargs.get('target_orbirals', 0),
 
             # MD stuff
             thermostat=kwargs.get('thermostat', 'NVE'),
@@ -133,7 +135,7 @@ class Cody:
         from SimLab.simulations import start_sim
         from SimLab.simulations import start_view
 
-        if self.verbosity > 1:
+        if self.verbosity > 2:
             curr_ase_dftb_command = os.environ["ASE_DFTB_COMMAND"]
             os.environ["ASE_DFTB_COMMAND"] = "dftb+ | tee PREFIX.out"
 
@@ -157,5 +159,5 @@ class Cody:
         if self.voice:
             os.system('spd-say "It is done."')
 
-        if self.verbosity > 1:
+        if self.verbosity > 2:
             os.environ["ASE_DFTB_COMMAND"] = curr_ase_dftb_command

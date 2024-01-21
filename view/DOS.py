@@ -32,6 +32,7 @@ def run_dftb(mol, mol_name, out_path, interactive_plot, dos_range):
 
     # plot stuff
     ax.plot(ene, dos)
+    ax.plot([0,0],[min(dos),max(dos)],'--')
     for e in eigen:
         if dos_range[0] <= e <= dos_range[1]:
             ax.plot([e, e], [0, 0.1 * max(dos)], color='black')
@@ -40,12 +41,11 @@ def run_dftb(mol, mol_name, out_path, interactive_plot, dos_range):
     ax.text(min(ene), max(dos), f'Fermi Energy: {fermi_e} eV, gap: {gap} eV', fontsize=12)
     ax.set_ylabel('DOS', fontsize=20)
     ax.set_xlabel('Energy [eV]', fontsize=20)
+    ax.set_yticks([])
 
     plt.tight_layout()
     fig.savefig(f'{out_path}DFTB_{mol_name}_DOS.png')
     if interactive_plot:
-        pass
         plt.show()
-        # plt.clf()
     else:
-        plt.clf()
+        plt.close('all')

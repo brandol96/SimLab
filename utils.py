@@ -97,7 +97,7 @@ def read_orbital_energy_dftb(path, mol_name, orbitals):
     return energies
 
 
-def read_fermi_levels_dftb(path, mol_name):
+def read_fermi_levels_dftb(path, mol_name, verbosity=2):
     # POSSIBLE PROBLEM:
     # sometimes a Fermi Filling is required by some, but not all molecules in some set
     # if a zero gap material is present, then the input of a Fermi Filling certainly will ensure
@@ -117,10 +117,13 @@ def read_fermi_levels_dftb(path, mol_name):
                 kpt = int(txt[1])  # useful for indirect gap?
             # true if NOT a header and not found lumo
             if txt != [] and txt[0] != 'KPT' and lumo_cur == [0, 0, 0]:
-                if float(txt[2]) < 1.0:  # found lumo of current KPOINT
-                    lumo_cur = [kpt, float(txt[0]), float(txt[1])]
+                band = int(txt[0])
+                energy = float(txt[1])
+                if float(txt[2]) < 1.0:  # found lowest unocupied KPOINT
+                    lumo_cur = [kpt, band, energy]
                 else:  # if occupation is not 0.0 then fill homo_cur
-                    homo_cur = [kpt, float(txt[0]), float(txt[1])]
+                    homo_cur = [kpt, band, energy]
+                energy_prev = energy
             # true we have reached the end of a KPOINT info
             if not txt:  # empty list is a false!
                 if lumo[2] >= lumo_cur[2]:
@@ -131,10 +134,11 @@ def read_fermi_levels_dftb(path, mol_name):
                 homo_cur = [0, 0, 0]
     fermi_e = round((lumo[2] + homo[2]) / 2, 6)
     gap = round(lumo[2] - homo[2], 6)
-    print(f'{"molName":<15} {"homo[kpt, Band, eV]":>20} {"lumo[kpt, Band, eV]":>20} {"gap":<3} {"fermi_e":<6}')
-    homo_string = f'[{homo[0]},{homo[1]},{homo[2]}]'
-    lumo_string = f'[{lumo[0]},{lumo[1]},{lumo[2]}]'
-    print(f'{mol_name:<15} {homo_string:>20} {lumo_string:>20} {gap:<3} {fermi_e:<3}')
+    if verbosity >=2:
+        print(f'\n{"molName":<15} {"homo[kpt, Band, eV]":>20} {"lumo[kpt, Band, eV]":>20} {"gap":<3} {"fermi_e":<6}')
+        homo_string = f'[{homo[0]},{homo[1]},{homo[2]}]'
+        lumo_string = f'[{lumo[0]},{lumo[1]},{lumo[2]}]'
+        print(f'{mol_name:<15} {homo_string:>20} {lumo_string:>20} {gap:<3} {fermi_e:<3}')
     return homo, lumo, gap, fermi_e
 
 

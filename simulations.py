@@ -26,7 +26,7 @@ def start_sim(mol, mol_name, out_path, **kwargs):
         os.environ["DFTB_PREFIX"] = f"/home/rbrandolt/dftb-23.1/skfiles/{SKFiles}"
         if simulation == 'optimize':
             from SimLab.calculator import fetch_dftb_calc
-            print(f'{method} optimization for {mol_name}')
+            print(f'Run: {method} optimization for {mol_name}')
             pbc = mol.get_pbc()
 
             if True in pbc:
@@ -58,7 +58,7 @@ def start_sim(mol, mol_name, out_path, **kwargs):
             max_SCC_steps = kwargs.get('max_SCC_steps')
             fermi_filling = kwargs.get('fermi_filling')
 
-            print(f'{method} molecular dynamics for {mol_name}')
+            print(f'Run: {method} molecular dynamics for {mol_name}')
             molecular_dynamics.run(mol, mol_name, kpts, thermostat, temp_profile, time_step,
                                    SCC, max_SCC, max_SCC_steps, fermi_filling)
 
@@ -98,7 +98,7 @@ def start_sim(mol, mol_name, out_path, **kwargs):
             cutoff_energy = kwargs.get('cutoff_energy')
             cutoff_oscillator = kwargs.get('cutoff_osc')
 
-            print(f'{method} {sim_type} optical absorption for {mol_name}')
+            print(f'Run: {method} {sim_type} optical absorption for {mol_name}')
             pbc = mol.get_pbc()
             if True in pbc:
                 print('Some direction has pbc, the molecule is NOT valid! ( Yet :o ) \n\n')
@@ -126,7 +126,7 @@ def start_sim(mol, mol_name, out_path, **kwargs):
 
                 print('\n\n')
         else:
-            print(f'{simulation} is not possible with {method}')
+            print(f'Run: {simulation} is not possible with {method}')
 
 
 def start_view(mol, mol_name, out_path, **kwargs):
@@ -141,19 +141,21 @@ def start_view(mol, mol_name, out_path, **kwargs):
             if True in pbc:
                 print('Some direction has pbc, set "simulation = bands" to view band structure and DOS')
             else:
+                print('No direction has pbc, simple DOS')
                 DOS.run_dftb(mol, mol_name, out_path, interactive_plot, dos_range)
 
         if simulation == 'bands':
             from SimLab.view import bands
-            print(f'{method} band structure for {mol_name}')
+            print(f'View: {method} band structure for {mol_name}')
             pbc = mol.get_pbc()
             if True in pbc:
                 BZ_path = kwargs.get('BZ_path')
                 BZ_step = kwargs.get('BZ_step')
                 bands_zoom = kwargs.get('bands_zoom')
+                verbosity = kwargs.get('verbosity')
                 print(f'\nSome direction has pbc, I\'ll use the provided path: {BZ_path} and step: {BZ_step}')
                 bands.run_dftb(mol, mol_name, out_path, bands_zoom, BZ_path, BZ_step,
-                               interactive_plot)
+                               interactive_plot,verbosity)
             else:
                 print('No direction has pbc, the molecule is invalid you silly!')
 
@@ -188,8 +190,40 @@ def start_view(mol, mol_name, out_path, **kwargs):
                     optical.run_laser(method, out_path, mol_name, interactive_plot)
                 elif sim_type == 'casida':
                     # TODO: remove 'kick' requirement
+                    print('Casida')
                     # this method depends on 'kick' optical to be already placed
                     # I know this is not really  required, but will do for now
-                    optical.run_casida(method, out_path, mol_name, cutoff_OscStr, cutoff_weight,
-                                       interactive_plot, energy_upper_plot)
+                    #optical.run_casida(method, out_path, mol_name, cutoff_OscStr, cutoff_weight,
+                    #                   interactive_plot, energy_upper_plot)
+                    optical.run_casida_pure(method, out_path, mol_name,
+                                            cutoff_OscStr, cutoff_weight, energy_upper_plot,
+                                            interactive_plot)
                 print('\n\n')
+
+        elif simulation == 'orbitals':
+            import numpy as np
+            from SimLab.analysis import orbitals
+            from SimLab.utils import read_fermi_levels_dftb
+
+            # get required variables
+            opt_out_path = f'optimize_{method}_{mol_name}' + os.sep
+            target_orbirals = kwargs.get('target_orbirals')
+
+            homo, lumo, gap, fermi_e = read_fermi_levels_dftb(opt_out_path, mol_name, verbosity=0)
+
+            # setup target folder for orbitals
+            H_0 = homo[1]
+            L_0 = lumo[1]
+
+            i = target_orbirals
+            homo_list = np.arange(H_0 - i, H_0 + 1, 1)
+            lumo_list = np.arange(L_0, L_0 + i + 1, 1)
+            orb_path = f'orbitals_DFTB_{mol_name}{os.sep}'
+            try:
+                os.mkdir(orb_path)
+            except:
+                pass
+
+            # start sim
+            print(f'Run: {method} calculation for {mol_name}')
+            orbitals.run(homo_list, lumo_list, opt_out_path, orb_path)
