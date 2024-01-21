@@ -202,7 +202,7 @@ def start_view(mol, mol_name, out_path, **kwargs):
 
         elif simulation == 'orbitals':
             import numpy as np
-            from SimLab.analysis import orbitals
+            from SimLab.view import orbitals
             from SimLab.utils import read_fermi_levels_dftb
 
             # get required variables
