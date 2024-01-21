@@ -4,7 +4,7 @@ import shutil
 
 
 def write_waveplot(path,orbitals):
-    with open('/ugly_solutions/waveplot_in.hsd', 'r') as WP:
+    with open('/home/rbrandolt/python-libs/SimLab/ugly_solutions/waveplot_in.hsd', 'r') as WP:
         with open(f'{path}waveplot_in.hsd','w+') as inp:
             for line in WP:
                 if 'PlottedLevels' in line:
