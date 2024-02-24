@@ -8,7 +8,7 @@ import statistics
 import os
 
 
-def output_eff_mass(mol_name, homo, lumo, gap, mass_hole, mass_ele):
+def output_eff_mass_out(mol_name, homo, lumo, gap, mass_hole, mass_ele):
     try:
         with open('effMass.out', 'r') as inputFile:
             with open('effMass.tmp', 'w+') as tmp:
@@ -26,6 +26,29 @@ def output_eff_mass(mol_name, homo, lumo, gap, mass_hole, mass_ele):
             inputFile.write(next_line + '\n')
             next_line_list = [mol_name, str(homo), str(lumo), str(gap), str(mass_hole), str(mass_ele)]
             next_line = '{: <50} {: >24} {: >24} {: >20} {: >20} {: >20}'.format(*next_line_list)
+            inputFile.write(next_line + '\n')
+
+
+def output_eff_mass_csv(mol_name, homo, lumo, gap, mass_hole, mass_ele):
+    try:
+        with open('effMass.csv', 'r') as inputFile:
+            with open('effMass.tmp', 'w+') as tmp:
+                for line in inputFile:
+                    # print(line)
+                    tmp.write(line)
+                next_line_list = [mol_name, str(homo).replace(',',';'), str(lumo).replace(',',';'),
+                                  str(gap), str(mass_hole), str(mass_ele)]
+                next_line = '{:<},{:<},{:<},{:<},{:<},{:<}'.format(*next_line_list)
+                tmp.write(next_line + '\n')
+        os.rename('effMass.tmp', 'effMass.csv')
+    except FileNotFoundError:
+        with open('effMass.csv', 'w+') as inputFile:
+            next_line_list = ['Molecule', 'HOMO', 'LUMO', 'gap', 'mass_hole', 'mass_elec']
+            next_line = '{:<},{:<},{:<},{:<},{:<},{:<}'.format(*next_line_list)
+            inputFile.write(next_line + '\n')
+            next_line_list = [mol_name, str(homo).replace(',',';'), str(lumo).replace(',',';'),
+                              str(gap), str(mass_hole), str(mass_ele)]
+            next_line = '{:<},{:<},{:<},{:<},{:<},{:<}'.format(*next_line_list)
             inputFile.write(next_line + '\n')
 
 
@@ -204,7 +227,8 @@ def run(mol, mol_name, out_path, BZ_step, interactive_plot):
     print(f'Electron Effective Mass: {eff_el}')
     print(f'Hole Effective Mass: {eff_hol}')
     print('\n\n')
-    output_eff_mass(mol_name, homo, lumo, gap, eff_hol, eff_el)
+    output_eff_mass_out(mol_name, homo, lumo, gap, eff_hol, eff_el)
+    output_eff_mass_csv(mol_name, homo, lumo, gap, eff_hol, eff_el)
 
     plt.title(f'{mol_name}: el mass = {eff_el} | hl mass = {eff_hol}')
     plt.xlabel(f'Distance [1/m]')

@@ -122,8 +122,10 @@ def run_dftb(mol, mol_name, out_path, zoom, path, dK,
         else:
             ax.text(position, -zoom -0.6, point,fontsize=fontsize, horizontalalignment='center')
     ax.plot([min(band_data[:,0]),max(band_data[:,0])],[center,center], '--', color='#272222')
-    #ax.text(min(band_data[:,0]),zoom+0.1, f'Fermi Energy: {fermi_e} eV gap: {gap} eV',fontsize=fontsize)
-    ax.text(min(band_data[:, 0]), zoom + 0.15, f'{mol_name.replace("_", " ")}', fontsize=fontsize)
+
+    # this here improvises a title
+    title = mol_name
+    ax.text(min(band_data[:, 0]), zoom + 0.15, title, fontsize=fontsize)
     ax.tick_params(axis='both', which='major', labelsize=fontsize)
 
     fig.savefig(f'{out_path}DFTB_{mol_name}_Bands.png')

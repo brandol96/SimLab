@@ -81,18 +81,6 @@ def start_sim(mol, mol_name, out_path, **kwargs):
                 bands.run(mol, mol_name, sampling)
 
             print('\n\n')
-        elif simulation == 'effMass':
-            from SimLab.analysis import effMass
-            print(f'Plotting {method} effective mass for {mol_name}')
-            pbc = mol.get_pbc()
-            interactive_plot = kwargs.get('interactive_plot')
-            BZ_step = kwargs.get('BZ_step')
-            out_path = f'bands_{method}_{mol_name}{os.sep}'
-            if True in pbc:
-                print('Some direction has pbc, the molecule is valid!')
-                effMass.run(mol, mol_name, out_path, BZ_step, interactive_plot)
-            else:
-                print('No direction has pbc, the molecule is NOT valid! \n\n')
 
         elif simulation == 'optical':
             from SimLab.analysis import optical
@@ -170,6 +158,19 @@ def start_view(mol, mol_name, out_path, **kwargs):
                                interactive_plot,verbosity)
             else:
                 print('No direction has pbc, the molecule is invalid you silly!')
+
+        if simulation == 'effMass':
+            from SimLab.analysis import effMass
+            print(f'Plotting {method} effective mass for {mol_name}')
+            pbc = mol.get_pbc()
+            interactive_plot = kwargs.get('interactive_plot')
+            BZ_step = kwargs.get('BZ_step')
+            out_path = f'bands_{method}_{mol_name}{os.sep}'
+            if True in pbc:
+                print('Some direction has pbc, the molecule is valid!')
+                effMass.run(mol, mol_name, out_path, BZ_step, interactive_plot)
+            else:
+                print('No direction has pbc, the molecule is NOT valid! \n\n')
 
         if simulation == 'optical':
             from SimLab.view import optical
