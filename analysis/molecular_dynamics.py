@@ -36,8 +36,11 @@ def run(mol, mol_name, kpts, thermostat, temp_profile, time_step,
         print('Some direction has pbc, be sure kpts provided are correct!')
         md = Dftb(atoms=mol,
                   kpts=kpts)
+        modes = Dftb(atoms=mol,
+                     kpts=kpts)
     else:
         md = Dftb(atoms=mol)
+        modes = Dftb(atoms=mol)
 
     # setup DFTB+ Calculator
     if thermostat == 'NVE':
@@ -57,16 +60,15 @@ def run(mol, mol_name, kpts, thermostat, temp_profile, time_step,
     if thermostat == 'NVT':
         # TODO: modes calculation can be place independently from MD into simulations.py
         # BTW EVERYTHING BEYOND THIS POINT IS UGLY! PLEASE LOOK AWAY!
-        modes = Dftb(atoms=mol,
-                     label='hessian_run',
-                     Driver_="SecondDerivatives",
-                     Driver_Delta='1E-4',
-                     Hamiltonian_SCC='Yes',
-                     Hamiltonian_SCCTolerance=max_SCC,
-                     Hamiltonian_MaxSCCIterations=max_SCC_steps,
-                     Hamiltonian_Filling=f"Fermi{{Temperature [K] = {fermi_filling} }}",
-                     Hamiltonian_Dispersion='LennardJones{Parameters = UFFParameters{}}',
-                     )
+        modes.set(label='hessian_run',
+                  Driver_="SecondDerivatives",
+                  Driver_Delta='1E-4',
+                  Hamiltonian_SCC='Yes',
+                  Hamiltonian_SCCTolerance=max_SCC,
+                  Hamiltonian_MaxSCCIterations=max_SCC_steps,
+                  Hamiltonian_Filling=f"Fermi{{Temperature [K] = {fermi_filling} }}",
+                  Hamiltonian_Dispersion='LennardJones{Parameters = UFFParameters{}}',
+                  )
         mol.set_calculator(modes)
         modes.calculate(mol)
         # TODO: find a good solution to the problem bellow
