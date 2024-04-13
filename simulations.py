@@ -217,12 +217,17 @@ def start_view(mol, mol_name, out_path, **kwargs):
             import numpy as np
             from SimLab.view import orbitals
             from SimLab.utils import read_fermi_levels_dftb
+            print(f'Run: {method} calculation for {mol_name}')
 
             # get required variables
             opt_out_path = f'optimize_{method}_{mol_name}' + os.sep
             target_orbirals = kwargs.get('target_orbirals')
+            KPTs = 1
+            WP_grid = kwargs.get('WP_grid')
 
             homo, lumo, gap, fermi_e = read_fermi_levels_dftb(opt_out_path, mol_name, verbosity=0)
+            homo_max_kpt = homo[0]
+            lumo_min_kpt = lumo[0]
 
             # setup target folder for orbitals
             H_0 = homo[1]
@@ -238,5 +243,8 @@ def start_view(mol, mol_name, out_path, **kwargs):
                 pass
 
             # start sim
-            print(f'Run: {method} calculation for {mol_name}')
-            orbitals.run(homo_list, lumo_list, opt_out_path, orb_path)
+            pbc = mol.get_pbc()
+            if True in pbc:
+                orbitals.run(homo_list, lumo_list, opt_out_path, orb_path, homo_max_kpt, lumo_min_kpt, WP_grid, periodic = True)
+            else:
+                orbitals.run(homo_list, lumo_list, opt_out_path, orb_path, homo_max_kpt, lumo_min_kpt, WP_grid, periodic = False)

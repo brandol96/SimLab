@@ -44,6 +44,7 @@ class Cody:
             use_LennardJones=kwargs.get('use_LennardJones', False),
             SKFiles=kwargs.get('SKFiles', 'Please supply a choice!'),
             target_orbirals=kwargs.get('target_orbirals', 0),
+            WP_grid=kwargs.get('WP_grid', 10),
 
             # MD stuff
             thermostat=kwargs.get('thermostat', 'NVE'),

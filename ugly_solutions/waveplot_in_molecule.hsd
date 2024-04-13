@@ -6,7 +6,6 @@ Options {
   RealComponent = Yes                # Plot real component of the wavefunction
   PlottedSpins = 1 -1
   PlottedLevels = 19 24 25 30                  # Levels to plot
-#  PlottedKpoints = 37                
   PlottedRegion =  OptimalCuboid {}  # Region to plot
 
   NrOfPoints = 100 100 100              # Number of grid points in each direction
