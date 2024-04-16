@@ -7,11 +7,14 @@ Options {
   PlottedSpins = 1 -1
   PlottedLevels = 1                  # Levels to plot
   PlottedKpoints = 1                
-  PlottedRegion =  OptimalCuboid {}  # Region to plot
+  PlottedRegion =  UnitCell {}  # Region to plot
 
   NrOfPoints = 30 30 30              # Number of grid points in each direction
   NrOfCachedGrids = -1               # Nr of cached grids (speeds up things)
   Verbose = Yes                      # Wanna see a lot of messages?
+  
+  FillBoxWithAtoms = Yes
+  RepeatBox = { 2 2 2 }
 }
 
 DetailedXml = "detailed.xml"         # File containing the detailed xml output

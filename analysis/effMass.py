@@ -148,7 +148,7 @@ def run(mol, mol_name, out_path, BZ_step, interactive_plot):
     # if we're lacking left points extend the band
 
     # I'm having trouble: when the band is extended, the plateau may be waaaay
-    # too large, thus the fit centering teh fit region still falls outside the
+    # too large, thus the fit centering the fit region still falls outside the
     # enlarged band, I'll add a "safety factor" to enalarge the band way beyond
     # what is actually needed, this WILL affect performance, because the way
     # I'm searching for min and max goes through the entire list, but I can't think

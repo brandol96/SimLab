@@ -221,11 +221,13 @@ def start_view(mol, mol_name, out_path, **kwargs):
 
             # get required variables
             opt_out_path = f'optimize_{method}_{mol_name}' + os.sep
+            #opt_out_path = f'bands_{method}_{mol_name}{os.sep}'
             target_orbirals = kwargs.get('target_orbirals')
             KPTs = 1
             WP_grid = kwargs.get('WP_grid')
+            WP_Box_View = kwargs.get('WP_Box_View')
 
-            homo, lumo, gap, fermi_e = read_fermi_levels_dftb(opt_out_path, mol_name, verbosity=0)
+            homo, lumo, gap, fermi_e = read_fermi_levels_dftb(opt_out_path, mol_name, verbosity=2)
             homo_max_kpt = homo[0]
             lumo_min_kpt = lumo[0]
 
@@ -237,6 +239,7 @@ def start_view(mol, mol_name, out_path, **kwargs):
             homo_list = np.arange(H_0 - i, H_0 + 1, 1)
             lumo_list = np.arange(L_0, L_0 + i + 1, 1)
             orb_path = f'orbitals_DFTB_{mol_name}{os.sep}'
+            
             try:
                 os.mkdir(orb_path)
             except:
@@ -245,6 +248,6 @@ def start_view(mol, mol_name, out_path, **kwargs):
             # start sim
             pbc = mol.get_pbc()
             if True in pbc:
-                orbitals.run(homo_list, lumo_list, opt_out_path, orb_path, homo_max_kpt, lumo_min_kpt, WP_grid, periodic = True)
+                orbitals.run(homo_list, lumo_list, opt_out_path, orb_path, homo_max_kpt, lumo_min_kpt, WP_grid, WP_Box_View, periodic = True)
             else:
-                orbitals.run(homo_list, lumo_list, opt_out_path, orb_path, homo_max_kpt, lumo_min_kpt, WP_grid, periodic = False)
+                orbitals.run(homo_list, lumo_list, opt_out_path, orb_path, homo_max_kpt, lumo_min_kpt, WP_grid, WP_Box_View, periodic = False)

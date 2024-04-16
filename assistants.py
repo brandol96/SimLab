@@ -45,6 +45,7 @@ class Cody:
             SKFiles=kwargs.get('SKFiles', 'Please supply a choice!'),
             target_orbirals=kwargs.get('target_orbirals', 0),
             WP_grid=kwargs.get('WP_grid', 10),
+            WP_Box_View=kwargs.get('WP_Box_View', [1,1,1]),
 
             # MD stuff
             thermostat=kwargs.get('thermostat', 'NVE'),
@@ -104,7 +105,8 @@ class Cody:
                    '.py' in outFile or \
                    os.path.isdir(outFile) or \
                    'FermiLevels.out' == outFile or \
-                   'effMass.out' == outFile
+                   'effMass.out' == outFile or \
+                   '.vmd' in outFile
 
             if os.path.isdir(out_path):
                 if warning:
