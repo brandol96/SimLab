@@ -28,5 +28,5 @@ Basis {
   # Including mio-1-1.hsd. (If you use a set, which depends on other sets,
   # the wfc.*.hsd files for each required set must be included in a similar
   # way.)
-  <<+ "/home/rbrandolt/dftb-23.1/skfiles/matsci-0-3/wfc.matsci-0-3.hsd"
+  <<+ "/home/rbrandolt/dftbplus-24.1/SKfiles/matsci-0.3.0/extras/wfc.hsd"
 }

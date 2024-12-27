@@ -5,7 +5,7 @@ def run(mol, mol_name, sampling):
                  Hamiltonian_KPointsAndWeights=f'KLines {{ \n {sampling} }}',
                  Hamiltonian_SCC='Yes',
                  Hamiltonian_ReadInitialCharges='Yes',
-                 Hamiltonian_MaxSCCIterations='1',
+                 Hamiltonian_MaxSCCIterations='100',
                  #Analysis_='',
                  #Analysis_WriteEigenVectors="Yes",
                  #Options_='',
