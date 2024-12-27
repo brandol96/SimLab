@@ -30,6 +30,8 @@ def run(Homo, Lumo, opt_path, orb_path, homo_max_kpt, lumo_min_kpt, WP_grid, WP_
     N = len(Homo) - 1
     current_path = os.getcwd()
 
+    #TODO: there is a possibility that HOMO-n <= 0. This orbital does not make sense and should be tested for
+
     for h in Homo:
         try:
             os.mkdir(f'{orb_path}homo-{N - i}')
