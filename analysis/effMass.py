@@ -8,9 +8,9 @@ import statistics
 import os
 
 
-def output_eff_mass_out(mol_name, homo, lumo, gap, mass_hole, mass_ele):
+def output_eff_mass_out(out_path,mol_name, homo, lumo, gap, mass_hole, mass_ele):
     try:
-        with open('effMass.out', 'r') as inputFile:
+        with open(f'{out_path}{os.sep}effMass.out', 'r') as inputFile:
             with open('effMass.tmp', 'w+') as tmp:
                 for line in inputFile:
                     # print(line)
@@ -18,9 +18,9 @@ def output_eff_mass_out(mol_name, homo, lumo, gap, mass_hole, mass_ele):
                 next_line_list = [mol_name, str(homo), str(lumo), str(gap), str(mass_hole), str(mass_ele)]
                 next_line = '{: <50} {: >24} {: >24} {: >20} {: >20} {: >20}'.format(*next_line_list)
                 tmp.write(next_line + '\n')
-        os.rename('effMass.tmp', 'effMass.out')
+        os.rename('effMass.tmp', f'{out_path}{os.sep}effMass.out')
     except FileNotFoundError:
-        with open('effMass.out', 'w+') as inputFile:
+        with open(f'{out_path}{os.sep}effMass.out', 'w+') as inputFile:
             next_line_list = ['Molecule', 'HOMO', 'LUMO', 'gap', 'mass_hole', 'mass_elec']
             next_line = '{: <50} {: >24} {: >24} {: >20} {: >20} {: >20}'.format(*next_line_list)
             inputFile.write(next_line + '\n')
@@ -29,9 +29,9 @@ def output_eff_mass_out(mol_name, homo, lumo, gap, mass_hole, mass_ele):
             inputFile.write(next_line + '\n')
 
 
-def output_eff_mass_csv(mol_name, homo, lumo, gap, mass_hole, mass_ele):
+def output_eff_mass_csv(out_path,mol_name, homo, lumo, gap, mass_hole, mass_ele):
     try:
-        with open('effMass.csv', 'r') as inputFile:
+        with open(f'{out_path}{os.sep}effMass.csv', 'r') as inputFile:
             with open('effMass.tmp', 'w+') as tmp:
                 for line in inputFile:
                     # print(line)
@@ -40,9 +40,9 @@ def output_eff_mass_csv(mol_name, homo, lumo, gap, mass_hole, mass_ele):
                                   str(gap), str(mass_hole), str(mass_ele)]
                 next_line = '{:<},{:<},{:<},{:<},{:<},{:<}'.format(*next_line_list)
                 tmp.write(next_line + '\n')
-        os.rename('effMass.tmp', 'effMass.csv')
+        os.rename('effMass.tmp', f'{out_path}{os.sep}effMass.csv')
     except FileNotFoundError:
-        with open('effMass.csv', 'w+') as inputFile:
+        with open(f'{out_path}{os.sep}effMass.csv', 'w+') as inputFile:
             next_line_list = ['Molecule', 'HOMO', 'LUMO', 'gap', 'mass_hole', 'mass_elec']
             next_line = '{:<},{:<},{:<},{:<},{:<},{:<}'.format(*next_line_list)
             inputFile.write(next_line + '\n')
@@ -51,15 +51,16 @@ def output_eff_mass_csv(mol_name, homo, lumo, gap, mass_hole, mass_ele):
             next_line = '{:<},{:<},{:<},{:<},{:<},{:<}'.format(*next_line_list)
             inputFile.write(next_line + '\n')
 
-
+# TODO: these two functions find_homo and find_lumo can be unified
 # find indexes of the regions to be fit
-# normally dftb+ min are plateaus of energy, to avoid a fit on one side of
+# normally dftb+ min/max are plateaus of energy, to avoid a fit on one side of
 # the parabolic region, I search for the mean index of the plateau
 # It is possible there are multiple plateaus, mainly if HOMO/LUMO
 # are near the edges of the band. I'll consider only the first plateau
 def find_homo(y_homo):
     # aux_idx: a list of the indexes of maximum values of y_homo in appearance order
     aux_idx = [i for i, x in enumerate(y_homo) if x == max(y_homo)]
+
     # if there's a single homo point just go back
     if len(aux_idx) == 1:
         return aux_idx[0]
@@ -70,15 +71,20 @@ def find_homo(y_homo):
             homo_idx = int(statistics.mean(aux_idx[0:i]))
             return homo_idx
         if aux_idx[i + 1] != aux_idx[i] + 1:
-            homo_idx = int(statistics.mean(aux_idx[0:i]))
-            return homo_idx
+            # I've found a case with two single point regions for HOMO/LUMO
+            # consequently the i-th index returned should not be a mean
+            # but the first test does not pick this case
+            if aux_idx[0:i]:
+                homo_idx = int(statistics.mean(aux_idx[0:i]))
+                return homo_idx
+
+            else:
+                return aux_idx[i]
 
 
 def find_lumo(y_lumo):
     # aux_idx: a list of the indexes of minimum values of y_lumo in appearance order
     aux_idx = [i for i, x in enumerate(y_lumo) if x == min(y_lumo)]
-
-    print(aux_idx)
 
     # if there's a single lumo point just go back
     if len(aux_idx) == 1:
@@ -89,12 +95,17 @@ def find_lumo(y_lumo):
         if i + 1 == len(aux_idx):
             lumo_idx = int(statistics.mean(aux_idx[0:i]))
             return lumo_idx
-        if aux_idx[i + 1] != aux_idx[i] + 1:
-            lumo_idx = int(statistics.mean(aux_idx[0:i]))
-            return lumo_idx
+            # I've found a case with two single point regions for HOMO/LUMO
+            # consequently the i-th index returned should not be a mean
+            # but the first test does not pick this case
+            if aux_idx[0:i]:
+                lumo_idx = int(statistics.mean(aux_idx[0:i]))
+                return lumo_idx
+            else:
+                return aux_idx[i]
 
 
-def run(mol, mol_name, out_path, BZ_step, interactive_plot):
+def run(method, mol, mol_name, out_path, BZ_step, interactive_plot):
     # load relevant data
     band_data = np.genfromtxt(f'{out_path}{mol_name}.band_tot.dat')
     homo, lumo, gap, fermi_e = utils.read_fermi_levels_dftb(out_path, mol_name)
@@ -227,15 +238,15 @@ def run(mol, mol_name, out_path, BZ_step, interactive_plot):
     print(f'Electron Effective Mass: {eff_el}')
     print(f'Hole Effective Mass: {eff_hol}')
     print('\n\n')
-    output_eff_mass_out(mol_name, homo, lumo, gap, eff_hol, eff_el)
-    output_eff_mass_csv(mol_name, homo, lumo, gap, eff_hol, eff_el)
+    output_eff_mass_out(out_path,mol_name, homo, lumo, gap, eff_hol, eff_el)
+    output_eff_mass_csv(out_path,mol_name, homo, lumo, gap, eff_hol, eff_el)
 
     plt.title(f'{mol_name}: el mass = {eff_el} | hl mass = {eff_hol}')
     plt.xlabel(f'Distance [1/m]')
     plt.ylabel(f'Enegy [J]')
     plt.legend()
 
-    plt.savefig(f'{out_path}{mol_name}_EffMassFit.png')
+    plt.savefig(f'{out_path}{method}_{mol_name}_EffMassFit.png')
     if interactive_plot:
         plt.show()
     else:

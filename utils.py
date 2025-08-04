@@ -59,6 +59,33 @@ def path_dftb(path, dK, mol, verbose, get_dict):
         i += 1
     return dftb_path
 
+def read_detailed_dftb(path):
+    with open(path) as detailed_file:
+        for line in detailed_file:
+            if 'Total energy:' in line:
+                return line.split()[4]
+
+
+def silly_method_to_get_plane_distance(molecule):
+    import statistics
+    positions = molecule.get_positions()
+    z_ref = positions[0][2]
+    z1_list = []
+    z2_list = []
+    for atom in positions:
+        if abs(atom[2]-z_ref) > 1.0:
+            z2_list.append(round(atom[2],3))
+        else:
+            z1_list.append(round(atom[2],3))
+    #print(positions)
+    #print(z1_list,z2_list)
+    if z1_list and z2_list:
+        pass
+    elif not z1_list:
+        z1_list = [round(positions[0][2],3)]
+    elif not z2_list:
+        z2_list = [round(positions[-1][2],3)]
+    return abs(statistics.mean(z1_list) - statistics.mean(z2_list))
 
 def read_dos_dftb(path, mol_name, return_eigen=False):
     ene = []

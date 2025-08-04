@@ -16,6 +16,9 @@ from ase.io import write
 # -----> kick
 # -----> laser
 # -----> casida
+# there are some only available for view:
+# -> effMass
+# -> orbitals
 
 def start_sim(mol, mol_name, out_path, **kwargs):
     simulation = kwargs.get('simulation')
@@ -43,8 +46,15 @@ def start_sim(mol, mol_name, out_path, **kwargs):
                 mol = read(f'geo_end.gen')
                 mol.center()
                 write(f'{method}_{mol_name}_end.traj', mol)
-            except:
-                print('First step did not converge SCC!')
+                write(f'{method}_{mol_name}_end_topUnit.pov', mol,).render()
+                write(f'{method}_{mol_name}_end_perspectiveUnit.pov', mol,
+                      rotation='10z,-80x').render()
+                write(f'{method}_{mol_name}_end_top.pov', mol * (5, 5, 1),).render()
+                write(f'{method}_{mol_name}_end_perspective.pov', mol * (5, 5, 1),
+                      rotation='10z,-80x').render()
+            except NameError as e:
+                print(f'Error in writing figures: {e}')
+                print('Previously, I had trouble with first step did not converge SCC!')
 
         elif simulation == 'molecular_dynamics':
             from SimLab.analysis import molecular_dynamics
@@ -168,7 +178,7 @@ def start_view(mol, mol_name, out_path, **kwargs):
             out_path = f'bands_{method}_{mol_name}{os.sep}'
             if True in pbc:
                 print('Some direction has pbc, the molecule is valid!')
-                effMass.run(mol, mol_name, out_path, BZ_step, interactive_plot)
+                effMass.run(method, mol, mol_name, out_path, BZ_step, interactive_plot)
             else:
                 print('No direction has pbc, the molecule is NOT valid! \n\n')
 
