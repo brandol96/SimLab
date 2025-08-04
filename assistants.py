@@ -228,7 +228,7 @@ class Cody:
                         # due to python's variable linking
                         csv_dict_temp = csv_dict.copy()
 
-                        #get molecule name and clean it up a bit
+                        # get molecule name and clean it up a bit
                         molName = os.path.splitext(os.path.basename(fileName))[0]
                         molName = molName.replace('_end','')
                         csv_dict_temp['Molecule'] = molName

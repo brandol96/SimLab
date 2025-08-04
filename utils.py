@@ -67,6 +67,7 @@ def read_detailed_dftb(path):
 
 
 def silly_method_to_get_plane_distance(molecule):
+    # TODO: This is kinda stupid, I should do some proper math here
     import statistics
     positions = molecule.get_positions()
     z_ref = positions[0][2]

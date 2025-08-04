@@ -52,6 +52,7 @@ def output_eff_mass_csv(out_path,mol_name, homo, lumo, gap, mass_hole, mass_ele)
             inputFile.write(next_line + '\n')
 
 # TODO: these two functions find_homo and find_lumo can be unified
+# TODO: because the code is basically the same
 # find indexes of the regions to be fit
 # normally dftb+ min/max are plateaus of energy, to avoid a fit on one side of
 # the parabolic region, I search for the mean index of the plateau

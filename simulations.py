@@ -53,7 +53,7 @@ def start_sim(mol, mol_name, out_path, **kwargs):
                 write(f'{method}_{mol_name}_end_perspective.pov', mol * (5, 5, 1),
                       rotation='10z,-80x').render()
             except NameError as e:
-                print(f'Error in writing figures: {e}')
+                print(f'Error in writing figures! ---> {e}')
                 print('Previously, I had trouble with first step did not converge SCC!')
 
         elif simulation == 'molecular_dynamics':
