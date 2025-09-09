@@ -77,3 +77,4 @@ def evaluate_grid(filename,verbose=False):
                     min_z = z
     print('minimal energy configuration:')
     print(f'unit cell: ({min_x},{min_y},{min_z}) with energy: {min_en} eV')
+    return min_x, min_y, min_z, min_en

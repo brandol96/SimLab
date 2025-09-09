@@ -141,6 +141,7 @@ class Cody:
         print('\n##### CLEANUP DONE #####\n')
 
     def compile_results(self):
+        # this is very ugly :(
         from ase.io import read, write
         from SimLab.utils import read_fermi_levels_dftb
         from SimLab.utils import read_detailed_dftb
@@ -156,7 +157,7 @@ class Cody:
         else:
             print(f'creating "{compiledResults_folder}" folder')
             os.mkdir(compiledResults_folder)
-            os.mkdir(compiledResults_folder + os.sep + 'band')
+            os.mkdir(compiledResults_folder + os.sep + 'bands')
             os.mkdir(compiledResults_folder + os.sep + 'geom')
             os.mkdir(compiledResults_folder + os.sep + 'traj')
 
@@ -236,7 +237,7 @@ class Cody:
                         # read molecule and get its cell
                         end_mol = read(folder+os.sep+fileName)
                         end_cell = end_mol.get_cell_lengths_and_angles()
-                        write(f'{mol_name}.traj', end_mol) # write trajectory before expanding
+                        write(f'{molName}.traj', end_mol) # write trajectory before expanding
                         end_mol *= (2,2,1) # use 4 unit cells to ensure there are at least 4 atoms
                         csv_dict_temp['Cell Vector Lenght 1 (Angs)'] = round(end_cell[0],3)
                         csv_dict_temp['Cell Vector Lenght 2 (Angs)'] = round(end_cell[1],3)
@@ -247,7 +248,7 @@ class Cody:
 
                         # TODO: find out gow to make this an input instead of having to edit the source code
                         # TODO: also, bond lenght being dependent on atom index is very sensible to
-                        # TODO geometry construction, it should be more generic so I dot keep this mind
+                        # TODO: geometry construction, it should be more generic so I dot keep this mind
                         csv_dict_temp['Key Distance 1 (Angs)'] = round(end_mol.get_distance(0, 1),3)
                         csv_dict_temp['Key Distance 2 (Angs)'] = round(end_mol.get_distance(0, 2),3)
                         csv_dict_temp['Key Distance 3 (Angs)'] = round(end_mol.get_distance(0, 3),3)
