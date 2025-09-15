@@ -49,9 +49,10 @@ def start_sim(mol, mol_name, out_path, **kwargs):
                 write(f'{method}_{mol_name}_end_topUnit.pov', mol,).render()
                 write(f'{method}_{mol_name}_end_perspectiveUnit.pov', mol,
                       rotation='10z,-80x').render()
-                write(f'{method}_{mol_name}_end_top.pov', mol * (5, 5, 1),).render()
-                write(f'{method}_{mol_name}_end_perspective.pov', mol * (5, 5, 1),
-                      rotation='10z,-80x').render()
+                if True in pbc:
+                    write(f'{method}_{mol_name}_end_top.pov', mol * (5, 5, 1),).render()
+                    write(f'{method}_{mol_name}_end_perspective.pov', mol * (5, 5, 1),
+                          rotation='10z,-80x').render()
             except NameError as e:
                 print(f'Error in writing figures! ---> {e}')
                 print('Previously, I had trouble with first step did not converge SCC!')
