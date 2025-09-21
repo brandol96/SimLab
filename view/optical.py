@@ -21,7 +21,7 @@ def run_kick(method, out_path, mol_name, interactive_plot, directions, fourier_d
     title_font = 20
     label_font = 16
     text_font = 14
-    x_range = [0, 30]
+    x_range = [0, 2]
 
     print('\n\nstart plot\n\n')
     # setup figure

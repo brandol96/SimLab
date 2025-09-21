@@ -69,7 +69,7 @@ class Cody:
             n_excitations=kwargs.get('n_excitations', 20),
             field_strength=kwargs.get('field_strength', 1E-3),
             directions=kwargs.get('directions', 'XYZ'),
-            fourier_damp=kwargs.get('fourierDamp', 10),
+            fourier_damp=kwargs.get('fourier_damp', 10),
             laser_energy=kwargs.get('laser_energy', 'PLEASE SUPPLY SOMETHING!'),
             cutoff_energy=kwargs.get('cutoff_energy', 30),
             cutoff_osc=kwargs.get('cutoff_osc', 0.000001),
