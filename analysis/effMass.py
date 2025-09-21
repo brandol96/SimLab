@@ -63,6 +63,7 @@ def find_homo(y_homo):
     aux_idx = [i for i, x in enumerate(y_homo) if x == max(y_homo)]
 
     # if there's a single homo point just go back
+    # test
     if len(aux_idx) == 1:
         return aux_idx[0]
 
