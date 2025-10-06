@@ -223,7 +223,7 @@ def run_casida(method, out_path, mol_name, cutoff_OscStr, cutoff_weight,
         prev_energy = energy
         print(energy, transition)
 
-    plt.plot(X, Y)
+    plt.plot(X, Y,'-')
     plt.axis([0.5, energy_upper_plot, 0.0, max(Y)])
     plt.grid(True)
     fig.savefig(f'{out_path}{method}_{mol_name}_Casida.png')
