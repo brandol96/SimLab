@@ -237,7 +237,7 @@ class Cody:
                         # read molecule and get its cell
                         end_mol = read(folder+os.sep+fileName)
                         end_cell = end_mol.get_cell_lengths_and_angles()
-                        write(f'{molName}.traj', end_mol) # write trajectory before expanding
+                        write(f'{compiledResults_folder}{os.sep}traj{os.sep}{molName}.traj', end_mol) # write trajectory before expanding
                         end_mol *= (2,2,1) # use 4 unit cells to ensure there are at least 4 atoms
                         csv_dict_temp['Cell Vector Lenght 1 (Angs)'] = round(end_cell[0],3)
                         csv_dict_temp['Cell Vector Lenght 2 (Angs)'] = round(end_cell[1],3)
