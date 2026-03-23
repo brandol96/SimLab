@@ -26,7 +26,7 @@ def start_sim(mol, mol_name, out_path, **kwargs):
 
     if method == 'DFTB':
         SKFiles = kwargs.get('SKFiles')
-        os.environ["DFTB_PREFIX"] = (f"/home/rbrandolt/dftbplus-24.1/SKfiles/{SKFiles}/skfiles")
+        os.environ["DFTB_PREFIX"] = SKFiles
         if simulation == 'optimize':
             from SimLab.calculator import fetch_dftb_calc
             print(f'Run: {method} optimization for {mol_name}')
