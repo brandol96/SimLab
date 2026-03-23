@@ -258,7 +258,18 @@ def start_view(mol, mol_name, out_path, **kwargs):
 
             # start sim
             pbc = mol.get_pbc()
+            SKfiles = kwargs.get('SKFiles')
             if True in pbc:
-                orbitals.run(homo_list, lumo_list, opt_out_path, orb_path, homo_max_kpt, lumo_min_kpt, WP_grid, WP_Box_View, periodic = True)
+                periodic = True
+                orbitals.run(homo_list, lumo_list,
+                             opt_out_path, orb_path,
+                             homo_max_kpt, lumo_min_kpt,
+                             WP_grid, WP_Box_View,
+                             periodic, SKfiles)
             else:
-                orbitals.run(homo_list, lumo_list, opt_out_path, orb_path, homo_max_kpt, lumo_min_kpt, WP_grid, WP_Box_View, periodic = False)
+                periodic = False
+                orbitals.run(homo_list, lumo_list,
+                             opt_out_path, orb_path,
+                             homo_max_kpt, lumo_min_kpt,
+                             WP_grid, WP_Box_View,
+                             periodic, SKfiles)
