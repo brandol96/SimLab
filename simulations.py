@@ -23,6 +23,8 @@ from ase.io import write
 def start_sim(mol, mol_name, out_path, **kwargs):
     simulation = kwargs.get('simulation')
     method = kwargs.get('method')
+    OMP_threads = kwargs.get('threads')
+    MPI_cores = kwargs.get('mpi_cores')
 
     if method == 'DFTB':
         SKFiles = kwargs.get('SKFiles')
@@ -40,8 +42,15 @@ def start_sim(mol, mol_name, out_path, **kwargs):
                 dftb = fetch_dftb_calc(mol, cluster=True, **kwargs)
             # run optimization through DFTB+ implemented routines
             mol.set_calculator(dftb)
+
+            # for some reason, my version of ASE is skipping the global environment variable
+            # this fix is a bit much but will work for now for using MPI over openMP
             print(os.environ["ASE_DFTB_COMMAND"])
-            dftb.command = "mpiexec -np 12 dftb+ > PREFIX.out"
+            if MPI_cores != 1:
+                dftb.command = f'mpiexec -np {MPI_cores} dftb+ > PREFIX.out'
+            else:
+                os.environ["OMP_NUM_THREADS"] = str(OMP_threads)
+                dftb.command = f'dftb+ > PREFIX.out'
             dftb.calculate(mol)
 
             try:
