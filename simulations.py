@@ -24,7 +24,7 @@ def start_sim(mol, mol_name, out_path, **kwargs):
     simulation = kwargs.get('simulation')
     method = kwargs.get('method')
     OMP_threads = kwargs.get('threads')
-    MPI_cores = kwargs.get('mpi_cores')
+    MPI_cores = kwargs.get('MPI_cores')
     print(MPI_cores)
 
     if method == 'DFTB':
