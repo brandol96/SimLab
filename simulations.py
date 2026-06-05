@@ -41,6 +41,7 @@ def start_sim(mol, mol_name, out_path, **kwargs):
             # run optimization through DFTB+ implemented routines
             mol.set_calculator(dftb)
             print(os.environ["ASE_DFTB_COMMAND"])
+            dftb.command = "mpiexec -np 12 dftb+ > PREFIX.out"
             dftb.calculate(mol)
 
             try:
