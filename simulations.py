@@ -40,6 +40,7 @@ def start_sim(mol, mol_name, out_path, **kwargs):
                 dftb = fetch_dftb_calc(mol, cluster=True, **kwargs)
             # run optimization through DFTB+ implemented routines
             mol.set_calculator(dftb)
+            print(os.environ["ASE_DFTB_COMMAND"])
             dftb.calculate(mol)
 
             try:
