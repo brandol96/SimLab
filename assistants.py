@@ -20,6 +20,8 @@ class Cody:
 
         if MPI_cores != 1:
             print('MPI and OpenMP do not work well together! I will disable OpenMP')
+            print(f'OMP_THREADS used: {1}')
+            print(f'MPI_CORES used: {MPI_cores}')
             os.environ["OMP_NUM_THREADS"] = "1"
         else:
             os.environ["OMP_NUM_THREADS"] = str(OMP_threads)
