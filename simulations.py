@@ -45,11 +45,14 @@ def start_sim(mol, mol_name, out_path, **kwargs):
 
             # for some reason, my version of ASE is skipping the global environment variable
             # this fix is a bit much but will work for now for using MPI over openMP
-            print(os.environ["ASE_DFTB_COMMAND"])
+
             if MPI_cores != 1:
+                print (f'mpiexec -np {MPI_cores} dftb+ > PREFIX.out')
                 dftb.command = f'mpiexec -np {MPI_cores} dftb+ > PREFIX.out'
             else:
+                os.environ["ASE_DFTB_COMMAND"] = f'dftb+ > PREFIX.out'
                 os.environ["OMP_NUM_THREADS"] = str(OMP_threads)
+                print(os.environ["ASE_DFTB_COMMAND"])
                 dftb.command = f'dftb+ > PREFIX.out'
             dftb.calculate(mol)
 
