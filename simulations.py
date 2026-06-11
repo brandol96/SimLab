@@ -23,7 +23,7 @@ from SimLab.calculator import set_parallelism
 def start_sim(mol, mol_name, out_path, **kwargs):
     simulation = kwargs.get('simulation')
     method = kwargs.get('method')
-    OMP_threads = kwargs.get('threads')
+    OMP_threads = kwargs.get('OMP_threads')
     MPI_cores = kwargs.get('MPI_cores')
     print('parsed to simulations: ',OMP_threads,MPI_cores)
 
