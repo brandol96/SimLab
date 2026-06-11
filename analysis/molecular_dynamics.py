@@ -112,6 +112,6 @@ def run(OMP_threads,MPI_cores,mol, mol_name, kpts, thermostat, temp_profile, tim
                Hamiltonian_Dispersion='LennardJones{Parameters = UFFParameters{}}',
                )
 
-    set_parallelism(md, MPI_cores, OMP_threads)
+    set_parallelism(md,OMP_threads,MPI_cores)
     mol.set_calculator(md)
     md.calculate(mol)
