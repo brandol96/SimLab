@@ -15,6 +15,7 @@ def highest_mode():
 def run(OMP_threads,MPI_cores,mol, mol_name, kpts, thermostat, temp_profile, time_step,
         SCC, max_SCC, max_SCC_steps, fermi_filling):
     from ase.calculators.dftb import Dftb
+    from SimLab.calculator import set_parallelism
 
     # if this condition if True, then the variable TempProfile has None
     if not temp_profile:
