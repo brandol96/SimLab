@@ -44,7 +44,7 @@ def start_sim(mol, mol_name, out_path, **kwargs):
 
             # for some reason, my version of ASE is skipping the global environment variable
             # this fix is a bit much but will work for now for using MPI over openMP
-            dftb = set_parallelism(dftb,**kwargs)
+            dftb = set_parallelism(dftb,MPI_cores, OMP_threads)
 
             # run optimization through DFTB+ implemented routines
             mol.set_calculator(dftb)
