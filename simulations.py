@@ -25,7 +25,7 @@ def start_sim(mol, mol_name, out_path, **kwargs):
     method = kwargs.get('method')
     OMP_threads = kwargs.get('threads')
     MPI_cores = kwargs.get('MPI_cores')
-    print(MPI_cores)
+    print('parsed to simulations: ',OMP_threads,MPI_cores)
 
     if method == 'DFTB':
         SKFiles = kwargs.get('SKFiles')

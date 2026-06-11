@@ -16,6 +16,7 @@ def run(OMP_threads,MPI_cores,mol, mol_name, kpts, thermostat, temp_profile, tim
         SCC, max_SCC, max_SCC_steps, fermi_filling):
     from ase.calculators.dftb import Dftb
     from SimLab.calculator import set_parallelism
+    print('parsed to md: ', OMP_threads, MPI_cores)
 
     # if this condition if True, then the variable TempProfile has None
     if not temp_profile:

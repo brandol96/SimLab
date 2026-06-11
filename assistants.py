@@ -15,7 +15,7 @@ class Cody:
         if self.voice:
             os.system('spd-say "Hello, I am Cody!"')
 
-        OMP_threads = kwargs.get('threads', 1)
+        OMP_threads = kwargs.get('OMP_threads', 1)
         MPI_cores = kwargs.get('mpi_cores', 1)
 
         if MPI_cores != 1:
@@ -31,7 +31,7 @@ class Cody:
         # simulation parameters
         self.parameters = dict(
             # generic stuff
-            OMP_threads=kwargs.get('threads', 1),
+            OMP_threads=kwargs.get('OMP_threads', 1),
             MPI_cores = kwargs.get('mpi_cores', 1),
             simulation=kwargs.get('simulation', 'Optimize'),
             view_only=kwargs.get('view_only', False),
