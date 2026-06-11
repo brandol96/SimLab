@@ -109,5 +109,14 @@ def run(mol, mol_name, kpts, thermostat, temp_profile, time_step,
                Hamiltonian_Dispersion='LennardJones{Parameters = UFFParameters{}}',
                )
 
+    if MPI_cores != 1:
+        print(f'mpiexec -np {MPI_cores} dftb+ > PREFIX.out')
+        md.command = f'mpiexec -np {MPI_cores} dftb+ > PREFIX.out'
+    else:
+        os.environ["ASE_DFTB_COMMAND"] = f'dftb+ > PREFIX.out'
+        os.environ["OMP_NUM_THREADS"] = str(OMP_threads)
+        print(os.environ["ASE_DFTB_COMMAND"])
+        md.command = f'dftb+ > PREFIX.out'
+
     mol.set_calculator(md)
     md.calculate(mol)
