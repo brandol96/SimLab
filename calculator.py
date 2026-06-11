@@ -1,5 +1,5 @@
 # calculator definitions
-def set_parallelism(calc,MPI_cores, OMP_threads):
+def set_parallelism(calc,OMP_threads,MPI_cores):
     import os
     if MPI_cores != 1:
         print(f'mpiexec -np {MPI_cores} dftb+ > PREFIX.out')
