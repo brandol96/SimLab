@@ -70,7 +70,7 @@ def run(OMP_threads,MPI_cores,mol, mol_name, kpts, thermostat, temp_profile, tim
                   Hamiltonian_Filling=f"Fermi{{Temperature [K] = {fermi_filling} }}",
                   Hamiltonian_Dispersion='LennardJones{Parameters = UFFParameters{}}',
                   )
-        modes = set_parallelism(modes, **kwargs)
+        modes = set_parallelism(modes,OMP_threads,MPI_cores)
         mol.set_calculator(modes)
         modes.calculate(mol)
         # TODO: find a good solution to the problem bellow
