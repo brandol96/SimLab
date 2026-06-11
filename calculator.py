@@ -1,4 +1,18 @@
 # calculator definitions
+def set_parallelism(calc,**kwargs):
+    OMP_threads = kwargs.get('threads')
+    MPI_cores = kwargs.get('MPI_cores')
+    if MPI_cores != 1:
+        print(f'mpiexec -np {MPI_cores} dftb+ > PREFIX.out')
+        calc.command = f'mpiexec -np {MPI_cores} dftb+ > PREFIX.out'
+        return calc
+    else:
+        os.environ["ASE_DFTB_COMMAND"] = f'dftb+ > PREFIX.out'
+        os.environ["OMP_NUM_THREADS"] = str(OMP_threads)
+        print(os.environ["ASE_DFTB_COMMAND"])
+        calc.command = f'dftb+ > PREFIX.out'
+        return calc
+
 def boolean_to_string(parameter):
     # convert logical variable into DFTB+ pattern
     if type(parameter == bool):

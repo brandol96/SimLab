@@ -3,7 +3,7 @@ import shutil
 import os
 from ase.io import read
 from ase.io import write
-
+from SimLab.calculator import set_parallelism
 
 # to choose a simulation the varaible 'simulation' msut be fileld along with any
 # required variables, any value left undeclared will be assumed to be standard
@@ -41,20 +41,13 @@ def start_sim(mol, mol_name, out_path, **kwargs):
             else:
                 print('No direction has pbc, DFTB will NOT perform lattice optimization')
                 dftb = fetch_dftb_calc(mol, cluster=True, **kwargs)
-            # run optimization through DFTB+ implemented routines
-            mol.set_calculator(dftb)
 
             # for some reason, my version of ASE is skipping the global environment variable
             # this fix is a bit much but will work for now for using MPI over openMP
+            dftb = set_parallelism(dftb,**kwargs)
 
-            if MPI_cores != 1:
-                print (f'mpiexec -np {MPI_cores} dftb+ > PREFIX.out')
-                dftb.command = f'mpiexec -np {MPI_cores} dftb+ > PREFIX.out'
-            else:
-                os.environ["ASE_DFTB_COMMAND"] = f'dftb+ > PREFIX.out'
-                os.environ["OMP_NUM_THREADS"] = str(OMP_threads)
-                print(os.environ["ASE_DFTB_COMMAND"])
-                dftb.command = f'dftb+ > PREFIX.out'
+            # run optimization through DFTB+ implemented routines
+            mol.set_calculator(dftb)
             dftb.calculate(mol)
 
             try:
@@ -85,7 +78,8 @@ def start_sim(mol, mol_name, out_path, **kwargs):
             fermi_filling = kwargs.get('fermi_filling')
 
             print(f'Run: {method} molecular dynamics for {mol_name}')
-            molecular_dynamics.run(mol, mol_name, kpts, thermostat, temp_profile, time_step,
+            molecular_dynamics.run(OMP_threads,MPI_cores,
+                                   mol, mol_name, kpts, thermostat, temp_profile, time_step,
                                    SCC, max_SCC, max_SCC_steps, fermi_filling)
 
         elif simulation == 'bands':
