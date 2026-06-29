@@ -81,7 +81,7 @@ def start_sim(mol, mol_name, out_path, **kwargs):
             print(f'Run: {method} molecular dynamics for {mol_name}')
             molecular_dynamics.run(OMP_threads,MPI_cores,
                                    mol, mol_name, kpts, thermostat, temp_profile, time_step,
-                                   SCC, max_SCC, max_SCC_steps, fermi_filling)
+                                   SCC, max_SCC, max_SCC_steps, fermi_filling,verbosity)
 
         elif simulation == 'bands':
             print(f'{method} band structure for {mol_name}')

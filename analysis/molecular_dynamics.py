@@ -13,7 +13,7 @@ def highest_mode():
 
 
 def run(OMP_threads,MPI_cores,mol, mol_name, kpts, thermostat, temp_profile, time_step,
-        SCC, max_SCC, max_SCC_steps, fermi_filling):
+        SCC, max_SCC, max_SCC_steps, fermi_filling,verbosity):
     from ase.calculators.dftb import Dftb
     from SimLab.calculator import set_parallelism
     print('parsed to md: ', OMP_threads, MPI_cores)
@@ -71,7 +71,7 @@ def run(OMP_threads,MPI_cores,mol, mol_name, kpts, thermostat, temp_profile, tim
                   Hamiltonian_Filling=f"Fermi{{Temperature [K] = {fermi_filling} }}",
                   Hamiltonian_Dispersion='LennardJones{Parameters = UFFParameters{}}',
                   )
-        modes = set_parallelism(modes,OMP_threads,MPI_cores)
+        modes = set_parallelism(modes,OMP_threads,MPI_cores,verbosity)
         mol.set_calculator(modes)
         modes.calculate(mol)
         # TODO: find a good solution to the problem bellow
