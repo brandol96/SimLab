@@ -25,6 +25,7 @@ def start_sim(mol, mol_name, out_path, **kwargs):
     method = kwargs.get('method')
     OMP_threads = kwargs.get('OMP_threads')
     MPI_cores = kwargs.get('MPI_cores')
+    verbosity = kwargs.get('verbosity')
     print('parsed to simulations: ',OMP_threads,MPI_cores)
 
     if method == 'DFTB':
@@ -44,7 +45,7 @@ def start_sim(mol, mol_name, out_path, **kwargs):
 
             # for some reason, my version of ASE is skipping the global environment variable
             # this fix is a bit much but will work for now for using MPI over openMP
-            dftb = set_parallelism(dftb,OMP_threads,MPI_cores)
+            dftb = set_parallelism(dftb,OMP_threads,MPI_cores,verbosity)
 
             # run optimization through DFTB+ implemented routines
             mol.set_calculator(dftb)

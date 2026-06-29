@@ -189,5 +189,5 @@ class Cody:
         if self.voice:
             os.system('spd-say "It is done."')
 
-        if self.verbosity > 2:
-            os.environ["ASE_DFTB_COMMAND"] = curr_ase_dftb_command
+        #if self.verbosity > 2:
+        #    os.environ["ASE_DFTB_COMMAND"] = curr_ase_dftb_command
