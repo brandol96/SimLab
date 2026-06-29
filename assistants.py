@@ -32,7 +32,7 @@ class Cody:
         self.parameters = dict(
             # generic stuff
             OMP_threads=kwargs.get('OMP_threads', 1),
-            MPI_cores = kwargs.get('mpi_cores', 1),
+            MPI_cores = kwargs.get('MPI_cores', 1),
             simulation=kwargs.get('simulation', 'Optimize'),
             view_only=kwargs.get('view_only', False),
             interactive_plot=kwargs.get('interactive_plot', False),
