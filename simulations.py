@@ -20,6 +20,10 @@ from SimLab.calculator import set_parallelism
 # -> effMass
 # -> orbitals
 
+def test_environ():
+    print(f'INFO: parsed to simulations - UseOmpThreads: {os.environ["UseOmpThreads"]} | '
+          f'OMP_NUM_THREADS: {os.environ["OMP_NUM_THREADS"]}')
+
 def start_sim(mol, mol_name, out_path, **kwargs):
     simulation = kwargs.get('simulation')
     method = kwargs.get('method')
@@ -51,9 +55,7 @@ def start_sim(mol, mol_name, out_path, **kwargs):
             # run optimization through DFTB+ implemented routines
             os.environ["UseOmpThreads"] = "Yes"
             os.environ["OMP_NUM_THREADS"] = str(OMP_threads)
-            if verbosity >1:
-                print(f'INFO: parsed to simulations - UseOmpThreads: {os.environ["UseOmpThreads"]} | '
-                      f'OMP_NUM_THREADS: {os.environ["OMP_NUM_THREADS"]}')
+            if verbosity >1: test_environ()
             mol.set_calculator(dftb)
             dftb.calculate(mol)
 
