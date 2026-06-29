@@ -48,6 +48,9 @@ def start_sim(mol, mol_name, out_path, **kwargs):
             dftb = set_parallelism(dftb,OMP_threads,MPI_cores,verbosity)
 
             # run optimization through DFTB+ implemented routines
+            os.environ["UseOmpThreads"] = "Yes"
+            os.environ["OMP_NUM_THREADS"] = str(OMP_threads)
+            print('running: ', os.environ["UseOmpThreads"], os.environ["OMP_NUM_THREADS"])
             mol.set_calculator(dftb)
             dftb.calculate(mol)
 
