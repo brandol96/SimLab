@@ -181,6 +181,7 @@ class Cody:
                 start_view(mol, mol_name, out_path, **self.parameters)
             else:
                 start_sim(mol, mol_name, out_path, **self.parameters)
+                os.environ["UseOmpThreads"] = "No"
                 self.write_parameters()
                 if self.parameters['simulation'] != 'effMass':
                     self.clean_files(out_path)
