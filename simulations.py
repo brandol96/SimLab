@@ -26,7 +26,8 @@ def start_sim(mol, mol_name, out_path, **kwargs):
     OMP_threads = kwargs.get('OMP_threads')
     MPI_cores = kwargs.get('MPI_cores')
     verbosity = kwargs.get('verbosity')
-    print('parsed to simulations: ',OMP_threads,MPI_cores)
+    if verbosity >1:
+        print(f'INFO: parsed to simulations - OMP_threads: {OMP_threads} | MPI_cores: {MPI_cores}')
 
     if method == 'DFTB':
         SKFiles = kwargs.get('SKFiles')
@@ -50,7 +51,9 @@ def start_sim(mol, mol_name, out_path, **kwargs):
             # run optimization through DFTB+ implemented routines
             os.environ["UseOmpThreads"] = "Yes"
             os.environ["OMP_NUM_THREADS"] = str(OMP_threads)
-            print('running: ', os.environ["UseOmpThreads"], os.environ["OMP_NUM_THREADS"])
+            if verbosity >1:
+                print(f'INFO: parsed to simulations - UseOmpThreads: {os.environ["UseOmpThreads"]} | '
+                      f'OMP_NUM_THREADS: {os.environ["OMP_NUM_THREADS"]}')
             mol.set_calculator(dftb)
             dftb.calculate(mol)
 
