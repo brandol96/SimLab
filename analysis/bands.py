@@ -2,6 +2,7 @@ def run(OMP_threads, MPI_cores, verbosity,
         mol, mol_name, sampling):
     import os
     from ase.calculators.dftb import Dftb
+    from SimLab.calculator import set_parallelism
     bands = Dftb(atoms=mol,
                  Hamiltonian_KPointsAndWeights=f'KLines {{ \n {sampling} }}',
                  Hamiltonian_SCC='Yes',
