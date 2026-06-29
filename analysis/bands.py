@@ -1,4 +1,5 @@
-def run(mol, mol_name, sampling):
+def run(OMP_threads, MPI_cores, verbosity,
+        mol, mol_name, sampling):
     import os
     from ase.calculators.dftb import Dftb
     bands = Dftb(atoms=mol,
@@ -12,6 +13,7 @@ def run(mol, mol_name, sampling):
                  #Options_WriteDetailedXml='Yes'
                  )
     # run optimization through DFTB+ implemented routines
+    bands = set_parallelism(bands, OMP_threads, MPI_cores, verbosity)
     bands.calculate(mol)
 
     # dp_band to transform band.out into plottable data

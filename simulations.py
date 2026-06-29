@@ -103,7 +103,8 @@ def start_sim(mol, mol_name, out_path, **kwargs):
                 print(f'\nSome direction has pbc, I\'ll use the provided path: {BZ_path} and step: {BZ_step}')
                 print(f'Path generated:\n\n{sampling}')
                 print(f'Use verbosity >= 3 for more details...')
-                bands.run(mol, mol_name, sampling)
+                bands.run(OMP_threads, MPI_cores, verbosity,
+                          mol, mol_name, sampling)
 
             print('\n\n')
 
