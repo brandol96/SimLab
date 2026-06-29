@@ -2,6 +2,7 @@
 def set_parallelism(calc,OMP_threads,MPI_cores,verbosity):
     import os
     if MPI_cores != 1:
+        os.environ["OMP_NUM_THREADS"] = "1"
         print(f'mpiexec -np {MPI_cores} dftb+ > PREFIX.out')
         if verbosity > 2:
             calc.command = f'mpiexec -np {MPI_cores} dftb+ | tee PREFIX.out'
