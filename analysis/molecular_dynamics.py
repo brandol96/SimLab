@@ -17,7 +17,7 @@ def write_modes(skfiles_path):
     with open('modes_in.hsd','w+') as inp:
         for line in modes_script:
             if 'Prefix' in line:
-                inp.write(Prefix = skfiles_path)
+                inp.write(f'  Prefix = {skfiles_path}')
             else:
                 inp.write(line)
 
