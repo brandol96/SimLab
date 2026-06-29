@@ -72,6 +72,7 @@ def start_sim(mol, mol_name, out_path, **kwargs):
         elif simulation == 'molecular_dynamics':
             from SimLab.analysis import molecular_dynamics
 
+            SKFiles = kwargs.get('SKFiles')
             kpts = kwargs.get('kpts')
             thermostat = kwargs.get('thermostat')
             temp_profile = kwargs.get('temp_profile')
@@ -82,7 +83,7 @@ def start_sim(mol, mol_name, out_path, **kwargs):
             fermi_filling = kwargs.get('fermi_filling')
 
             print(f'Run: {method} molecular dynamics for {mol_name}')
-            molecular_dynamics.run(OMP_threads,MPI_cores,
+            molecular_dynamics.run(OMP_threads,MPI_cores,SKFiles,
                                    mol, mol_name, kpts, thermostat, temp_profile, time_step,
                                    SCC, max_SCC, max_SCC_steps, fermi_filling,verbosity)
 

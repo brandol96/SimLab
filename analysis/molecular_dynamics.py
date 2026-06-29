@@ -11,8 +11,17 @@ def highest_mode():
                     vib_mode = data[1]
         return vib_mode
 
+def write_modes(skfiles_path):
+    modes_script = open('/home/rbrandolt/python-libs/SimLab/ugly_solutions/modes_in.hsd', 'r').readlines()
 
-def run(OMP_threads,MPI_cores,mol, mol_name, kpts, thermostat, temp_profile, time_step,
+    with open('modes_in.hsd','w+') as inp:
+        for line in modes_script:
+            if 'Prefix' in line:
+                inp.write(Prefix = skfiles_path)
+            else:
+                inp.write(line)
+
+def run(OMP_threads,MPI_cores,SKFiles,mol, mol_name, kpts, thermostat, temp_profile, time_step,
         SCC, max_SCC, max_SCC_steps, fermi_filling,verbosity):
     from ase.calculators.dftb import Dftb
     from SimLab.calculator import set_parallelism
@@ -84,11 +93,12 @@ def run(OMP_threads,MPI_cores,mol, mol_name, kpts, thermostat, temp_profile, tim
         import shutil
         import os
         import numpy as np
-        print('USING MODES CODE! REMEMBER TO CHANGE SKFILES PATH IN THE UGLY FOLDER!!!!')
-        print('or do something about it ffs...')
-        source = '/home/rbrandolt/python-libs/SimLab/ugly_solutions/modes_in.hsd'
-        destination = os.getcwd()
-        shutil.copy(source, destination)
+        #print('USING MODES CODE! REMEMBER TO CHANGE SKFILES PATH IN THE UGLY FOLDER!!!!')
+        #print('or do something about it ffs...')
+        #source = '/home/rbrandolt/python-libs/SimLab/ugly_solutions/modes_in.hsd'
+        #destination = os.getcwd()
+        #shutil.copy(source, destination)
+        write_modes(SKFiles)
         os.system('modes > modes.out')
         vib_mode_freq = highest_mode()
         print(f'found frequency: {vib_mode_freq} cm-1')
