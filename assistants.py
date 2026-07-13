@@ -127,12 +127,13 @@ class Cody:
         output_list = os.listdir()
         for outFile in output_list:
             keep = ('.traj' in outFile and '_end.traj' not in outFile) or \
-                   '.py' in outFile or \
-                   os.path.isdir(outFile) or \
-                   'FermiLevels.out' == outFile or \
-                   'effMass.out' == outFile or \
-                   'effMass.csv' == outFile or \
-                   '.vmd' in outFile
+                    '.py' in outFile or \
+                    os.path.isdir(outFile) or \
+                    'FermiLevels.out' == outFile or \
+                    'effMass.out' == outFile or \
+                    'effMass.csv' == outFile or \
+                    '.vmd' in outFile or \
+                    'nohup.out' == outFile
 
             if os.path.isdir(out_path):
                 if warning:
