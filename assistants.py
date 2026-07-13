@@ -43,7 +43,7 @@ class Cody:
             fix_angles=kwargs.get('fix_angles', False),
             fix_lengths=kwargs.get('fix_lengths', [False, False, False]),
             max_force=kwargs.get('max_force', 1E-4),
-            MaxStep=kwargs.get('max_step',)
+            MaxStep=kwargs.get('max_step',0.2),
             time_step=kwargs.get('time_step', 0.005),
             dos_range=kwargs.get('dos_range', 100),
             verbosity=kwargs.get('verbosity', 0),
