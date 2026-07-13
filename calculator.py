@@ -129,8 +129,8 @@ def fetch_dftb_calc(mol, cluster, **kwargs):
         if use_LennardJones:
             calc = Dftb(label=label,
                         kpts=kpts,
-                        Driver_="LatticeOptimisation",
-                        Driver_Optimizer="Lbfgs{ Memory = 5 }",
+                        Driver_="GeometryOptimisation",
+                        Driver_GeometryOptimisation="Lbfgs{ Memory = 5 }",
                         Driver_MaxSteps=max_driver_steps,
                         Driver_Convergence=f"{{ GradMax = {max_force * eVA_to_HaBohr} }}",
                         Driver_MaxAtomStep=0.05,
@@ -156,7 +156,7 @@ def fetch_dftb_calc(mol, cluster, **kwargs):
         else:
             calc = Dftb(label=label,
                         kpts=kpts,
-                        Driver_="LatticeOptimisation",
+                        Driver_="GeometryOptimisation",
                         Driver_Optimizer="Lbfgs{ Memory = 5 }",
                         Driver_MaxSteps=max_driver_steps,
                         Driver_Convergence=f"{{ GradMax = {max_force * eVA_to_HaBohr} }}",
