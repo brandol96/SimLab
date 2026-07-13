@@ -57,6 +57,7 @@ def fetch_dftb_calc(mol, cluster, **kwargs):
     fix_angles = boolean_to_string(kwargs.get('fix_angles'))
     fix_lengths = kwargs.get('fix_lengths').copy()
     n_points = kwargs.get('n_points')
+    max_atom_step = kwargs.get('max_atom_step')
     for i in range(3):
         fix_lengths[i] = boolean_to_string(fix_lengths[i])
 
@@ -76,7 +77,7 @@ def fetch_dftb_calc(mol, cluster, **kwargs):
                         Driver_GeometryOptimisation="Lbfgs{ Memory = 20 }",
                         Driver_MaxSteps=max_driver_steps,
                         Driver_Convergence=f"{{ GradMax = {max_force * eVA_to_HaBohr} }}",
-                        Driver_MaxAtomStep=0.05,
+                        Driver_MaxAtomStep=max_atom_step,
                         Driver_MovedAtoms='1:-1',
                         Driver_AppendGeometries='Yes',
                         Driver_Constraints_="",
@@ -102,7 +103,7 @@ def fetch_dftb_calc(mol, cluster, **kwargs):
                         Driver_GeometryOptimisation="Lbfgs{ Memory = 20 }",
                         Driver_MaxSteps=max_driver_steps,
                         Driver_Convergence=f"{{ GradMax = {max_force * eVA_to_HaBohr} }}",
-                        Driver_MaxAtomStep=0.05,
+                        Driver_MaxAtomStep=max_atom_step,
                         Driver_MovedAtoms='1:-1',
                         Driver_AppendGeometries='Yes',
                         Driver_Constraints_="",
@@ -129,7 +130,7 @@ def fetch_dftb_calc(mol, cluster, **kwargs):
                         Driver_GeometryOptimisation="Lbfgs{ Memory = 20 }",
                         Driver_MaxSteps=max_driver_steps,
                         Driver_Convergence=f"{{ GradMax = {max_force * eVA_to_HaBohr} }}",
-                        Driver_MaxAtomStep=0.05,
+                        Driver_MaxAtomStep=max_atom_step,
                         Driver_MovedAtoms='1:-1',
                         Driver_AppendGeometries='Yes',
                         Driver_Constraints_="",
@@ -156,7 +157,7 @@ def fetch_dftb_calc(mol, cluster, **kwargs):
                         Driver_GeometryOptimisation="Lbfgs{ Memory = 20 }",
                         Driver_MaxSteps=max_driver_steps,
                         Driver_Convergence=f"{{ GradMax = {max_force * eVA_to_HaBohr} }}",
-                        Driver_MaxAtomStep=0.05,
+                        Driver_MaxAtomStep=max_atom_step,
                         Driver_MovedAtoms='1:-1',
                         Driver_AppendGeometries='Yes',
                         Driver_Constraints_="",
