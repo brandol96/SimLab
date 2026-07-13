@@ -47,8 +47,148 @@ def get_grid_origin(mol, n_points):
               (max(Z) - min(Z)) * A_to_Hr / n_points]
     return grid_O, grid_S
 
-
 def fetch_dftb_calc(mol, cluster, **kwargs):
+    from ase.calculators.dftb import Dftb
+    label = kwargs.get('label')
+    kpts = kwargs.get('kpts')
+    max_force = kwargs.get('max_force')
+    max_driver_steps = kwargs.get('max_driver_steps')
+    lattice_opt = boolean_to_string(kwargs.get('lattice_opt'))
+    fix_angles = boolean_to_string(kwargs.get('fix_angles'))
+    fix_lengths = kwargs.get('fix_lengths').copy()
+    n_points = kwargs.get('n_points')
+    for i in range(3):
+        fix_lengths[i] = boolean_to_string(fix_lengths[i])
+
+    SCC = boolean_to_string(kwargs.get('SCC'))
+    max_SCC = kwargs.get('max_SCC')
+    max_SCC_steps = kwargs.get('max_SCC_steps')
+    fermi_filling = kwargs.get('fermi_filling')
+    use_LennardJones = kwargs.get('use_LennardJones')
+    grid_O, grid_S = get_grid_origin(mol, n_points)
+
+    eVA_to_HaBohr = 0.01944689673
+
+    if cluster:
+        if use_LennardJones:
+            calc = Dftb(label=label,
+                        Driver_="ConjugateGradient",
+                        Driver_MaxForceComponent=max_force * eVA_to_HaBohr,
+                        Driver_MaxSteps=max_driver_steps,
+                        Driver_MovedAtoms='1:-1',
+                        Driver_AppendGeometries='Yes',
+                        Hamiltonian_SCC=SCC,
+                        Hamiltonian_SCCTolerance=max_SCC,
+                        Hamiltonian_MaxSCCIterations=max_SCC_steps,
+                        Hamiltonian_Filling=f"Fermi{{Temperature [K] = {fermi_filling} }}",
+                        Hamiltonian_Dispersion='LennardJones{Parameters = UFFParameters{}}',
+                        Hamiltonian_ReadInitialCharges='Yes',
+                        Analysis_='',
+                        Analysis_WriteEigenvectors='Yes',
+                        #Analysis_ElectrostaticPotential_='',
+                        #Analysis_ElectrostaticPotential_OutputFile=f'potential_optimize.out',
+                        #Analysis_ElectrostaticPotential_AppendFile='Yes',
+                        #Analysis_ElectrostaticPotential_Softening='0.01',
+                        #Analysis_ElectrostaticPotential_Grid_='',
+                        #Analysis_ElectrostaticPotential_Grid_Spacing=f'{grid_S[0]} {grid_S[1]} {grid_S[1]}',
+                        #Analysis_ElectrostaticPotential_Grid_Origin=f'{grid_O[0]} {grid_O[1]} {grid_O[2]}',
+                        #Analysis_ElectrostaticPotential_Grid_GridPoints=f'{n_points} {n_points} 1',
+                        #Analysis_ElectrostaticPotential_Grid_Directions='1 0 0 0 1 0 0 0 1',
+                        Options_='',
+                        Options_ReadChargesAsText='Yes',
+                        Options_WriteDetailedXml='Yes',
+                        )
+        else:
+            calc = Dftb(label=label,
+                        Driver_="ConjugateGradient",
+                        Driver_MaxForceComponent=max_force * eVA_to_HaBohr,
+                        Driver_MaxSteps=max_driver_steps,
+                        Driver_MovedAtoms='1:-1',
+                        Driver_AppendGeometries='Yes',
+                        Hamiltonian_SCC=SCC,
+                        Hamiltonian_SCCTolerance=max_SCC,
+                        Hamiltonian_MaxSCCIterations=max_SCC_steps,
+                        Hamiltonian_Filling=f"Fermi{{Temperature [K] = {fermi_filling} }}",
+                        Hamiltonian_ReadInitialCharges='Yes',
+                        Analysis_='',
+                        Analysis_WriteEigenvectors='Yes',
+                        #Analysis_ElectrostaticPotential_='',
+                        #Analysis_ElectrostaticPotential_OutputFile=f'potential_optimize.out',
+                        #Analysis_ElectrostaticPotential_AppendFile='Yes',
+                        #Analysis_ElectrostaticPotential_Softening='0.01',
+                        #Analysis_ElectrostaticPotential_Grid_='',
+                        #Analysis_ElectrostaticPotential_Grid_Spacing=f'{grid_S[0]} {grid_S[1]} {grid_S[1]}',
+                        #Analysis_ElectrostaticPotential_Grid_Origin=f'{grid_O[0]} {grid_O[1]} {grid_O[2]}',
+                        #Analysis_ElectrostaticPotential_Grid_GridPoints=f'{n_points} {n_points} 1',
+                        #Analysis_ElectrostaticPotential_Grid_Directions='1 0 0 0 1 0 0 0 1',
+                        Options_='',
+                        Options_ReadChargesAsText='Yes',
+                        Options_WriteDetailedXml='Yes',
+                        )
+    else:
+        if use_LennardJones:
+            calc = Dftb(label=label,
+                        kpts=kpts,
+                        Driver_="ConjugateGradient",
+                        Driver_MaxForceComponent=max_force * eVA_to_HaBohr,
+                        Driver_MovedAtoms='1:-1',
+                        Driver_LatticeOpt=lattice_opt,
+                        Driver_FixAngles=fix_angles,
+                        Driver_FixLengths=f'{fix_lengths[0]} {fix_lengths[1]} {fix_lengths[2]}',
+                        Driver_MaxSteps=max_driver_steps,
+                        Driver_AppendGeometries='Yes',
+                        Hamiltonian_SCC=SCC,
+                        Hamiltonian_SCCTolerance=max_SCC,
+                        Hamiltonian_MaxSCCIterations=max_SCC_steps,
+                        Hamiltonian_Filling=f"Fermi{{Temperature [K] = {fermi_filling} }}",
+                        Hamiltonian_Dispersion='LennardJones{Parameters = UFFParameters{}}',
+                        Hamiltonian_ReadInitialCharges='Yes',
+                        Analysis_='',
+                        Analysis_WriteEigenvectors='Yes',
+                        #Analysis_ElectrostaticPotential_='',
+                        #Analysis_ElectrostaticPotential_OutputFile=f'potential_optimize.out',
+                        #Analysis_ElectrostaticPotential_AppendFile='Yes',
+                        #Analysis_ElectrostaticPotential_Softening='0.01',
+                        #Analysis_ElectrostaticPotential_Grid_='',
+                        #Analysis_ElectrostaticPotential_Grid_Spacing=f'{grid_S[0]} {grid_S[1]} {grid_S[1]}',
+                        #Analysis_ElectrostaticPotential_Grid_Origin=f'{grid_O[0]} {grid_O[1]} {grid_O[2]}',
+                        #Analysis_ElectrostaticPotential_Grid_GridPoints=f'{n_points} {n_points} 1',
+                        #Analysis_ElectrostaticPotential_Grid_Directions='1 0 0 0 1 0 0 0 1',
+                        Options_='',
+                        Options_ReadChargesAsText='Yes',
+                        Options_WriteDetailedXml='Yes',
+                        )
+        else:
+            calc = Dftb(label=label,
+                        kpts=kpts,
+                        Driver_="LatticeOptimisation",
+                        Driver_Optimizer="Lbfgs{ Memory = 5 }",
+                        Driver_MaxSteps=max_driver_steps,
+                        Driver_Convergence=f"{{ GradMax = {max_force * eVA_to_HaBohr} }}",
+                        Driver_MaxAtomStep=0.05,
+                        Driver_MovedAtoms='1:-1',
+                        Driver_AppendGeometries='Yes',
+                        Driver_Constraints_="",
+                        Driver_Constraints_FixAngles=fix_angles,
+                        Driver_Constraints_FixLengths=f"{fix_lengths[0]} {fix_lengths[1]} {fix_lengths[2]}",
+                        Hamiltonian_SCC=SCC,
+                        Hamiltonian_SCCTolerance=max_SCC,
+                        Hamiltonian_MaxSCCIterations=max_SCC_steps,
+                        Hamiltonian_ReadInitialCharges='Yes',
+                        Hamiltonian_Filling=f"Fermi{{Temperature [K] = {fermi_filling} }}",
+                        Analysis_='',
+                        Analysis_WriteEigenvectors='Yes',
+                        Options_='',
+                        Options_ReadChargesAsText='Yes',
+                        Options_WriteDetailedXml='Yes',
+                        ParserOptions_="",
+                        ParserOptions_ParserVersion=11,
+            )
+
+    return calc
+
+
+def fetch_dftb_calc_deprecated(mol, cluster, **kwargs):
     from ase.calculators.dftb import Dftb
     label = kwargs.get('label')
     kpts = kwargs.get('kpts')

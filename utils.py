@@ -29,7 +29,8 @@ def path_dftb(path, dK, mol, verbose, get_dict):
     import numpy as np
     path2kpts = {'G': [0.0, 0.0, 0.0],
                  'M': [0.5, 0.0, 0.0],
-                 'K': [2 / 3, 1 / 3, 0.0]}
+                 'K': [2 / 3, 1 / 3, 0.0],
+                 'Z': [0.0,0.0,1.0]}
 
     # I can't qute recall why this is here but is seems useful
     if get_dict:
