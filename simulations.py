@@ -153,7 +153,7 @@ def start_sim(mol, mol_name, out_path, **kwargs):
                 elif sim_type == 'casida':
                     print(f'Running Casida stuff!')
                     optical.run_casida(mol, OMP_threads, MPI_cores, max_SCC, max_SCC_steps, fermi_filling,
-                                       n_excitations, cutoff_energy, cutoff_oscillator)
+                                       n_excitations, cutoff_energy, cutoff_oscillator, verbosity)
 
                 print('\n\n')
         else:

@@ -101,7 +101,7 @@ def run_laser(mol, max_SCC, max_SCC_steps, fermi_filling,
 
 
 def run_casida(mol, OMP_threads, MPI_cores, max_SCC, max_SCC_steps, fermi_filling,
-               n_excitations, cutoff_energy, cutoff_oscillator):
+               n_excitations, cutoff_energy, cutoff_oscillator, verbosity):
     from ase.calculators.dftb import Dftb
     from SimLab.calculator import set_parallelism
 
