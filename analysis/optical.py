@@ -105,14 +105,12 @@ def run_casida(mol, max_SCC, max_SCC_steps, fermi_filling,
     from ase.calculators.dftb import Dftb
 
     CasidaBlock = {
-    'ExcitedState__': {                     # Double underscore forces: ExcitedState {
-        'Casida__': {                       # Double underscore forces: Casida {
-            'Diagonaliser': 'Arpack{}',
-            'EnergyWindow': cutoff_energy,
-            'NrOfExcitations': n_excitations,
-            'OscillatorWindow': cutoff_oscillator,
-            'Symmetry': 'singlet',
-        }
+    'ExcitedState { \n   Casida': {
+        'Diagonaliser': 'Arpack{}',
+        'EnergyWindow': cutoff_energy,
+        'NrOfExcitations': n_excitations,
+        'OscillatorWindow': cutoff_oscillator,
+        'Symmetry': 'singlet',
     }
 }
     optical = Dftb(atoms=mol,
