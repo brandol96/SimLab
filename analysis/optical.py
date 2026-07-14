@@ -103,39 +103,18 @@ def run_laser(mol, max_SCC, max_SCC_steps, fermi_filling,
 def run_casida(mol, max_SCC, max_SCC_steps, fermi_filling,
                n_excitations, cutoff_energy, cutoff_oscillator):
     from ase.calculators.dftb import Dftb
+    from SimLab.calculator import set_parallelism
 
-    CasidaBlock =''
-    CasidaBlock += "\nCasida {"
-    CasidaBlock += "\nDiagonaliser = Arpack{}"
-    CasidaBlock += "\nSymmetry = Singlet"
-    CasidaBlock += f"\nEnergyWindow = {cutoff_energy}"
-    CasidaBlock += f"\nOscillatorWindow = {cutoff_oscillator}"
-    CasidaBlock += f"\nNrOfExcitations = {n_excitations}"
-
-    optical = Dftb(atoms=mol,
-                   label=f'optical_casida',
-                   Hamiltonian_SCC='Yes',
-                   Hamiltonian_SCCTolerance=max_SCC,
-                   Hamiltonian_ReadInitialCharges='Yes',
-                   Hamiltonian_MaxSCCIterations=max_SCC_steps,
-                   Hamiltonian_Filling=f"Fermi{{Temperature [K] = {fermi_filling} }}",
-                   Hamiltonian_Mixer_='Anderson',
-                   Hamiltonian_Mixer_MixingParameter=5.000000000000000E-002,
-                   Hamiltonian_Mixer_Generations=8,
-                   ExcitedState=CasidaBlock,
-                   Options_='',
-                   Options_WriteChargesAsText='Yes')
-    # run calculation through DFTB+ implemented routines
-
+    #Define the block
     CasidaBlock = " {\n"  # Open the Casida block
     CasidaBlock += "   Diagonaliser = Arpack{}\n"
     CasidaBlock += "   Symmetry = singlet\n"
     CasidaBlock += f"   EnergyWindow = {cutoff_energy}\n"
     CasidaBlock += f"   OscillatorWindow = {cutoff_oscillator}\n"
     CasidaBlock += f"   NrOfExcitations = {n_excitations}\n"
-    CasidaBlock += " }"  # Close the Casida block
+    CasidaBlock += " }"
 
-    # 2. Put it together in the calculator configuration dictionary
+    #Calculator configuration dictionary
     config = {
         # The colon ':' forces ASE to print: ExcitedState { [your_string] }
         'ExcitedState:': f'Casida{CasidaBlock}',
@@ -153,10 +132,12 @@ def run_casida(mol, max_SCC, max_SCC_steps, fermi_filling,
         'Options_WriteChargesAsText': 'Yes'
     }
 
-    # 3. Instantiate the calculator using python dictionary unpacking (**)
+    #Instantiate the calculator
     optical = Dftb(atoms=mol,
                    label='optical_casida',
                    **config)
+    # run calculation through DFTB+ implemented routines
+    optical = set_parallelism(optical, OMP_threads, MPI_cores, verbosity)
     optical.calculate(mol)
 
 
