@@ -104,6 +104,7 @@ def run_casida(mol, OMP_threads, MPI_cores, max_SCC, max_SCC_steps,
                fermi_filling, n_excitations, cutoff_energy, cutoff_oscillator,
                verbosity):
     from ase.calculators.dftb import Dftb
+    from SimLab.calculator import set_parallelism
 
     optical = Dftb(atoms=mol,
                    label=f'optical_casida',
@@ -128,6 +129,7 @@ def run_casida(mol, OMP_threads, MPI_cores, max_SCC, max_SCC_steps,
                    ParserOptions_IgnoreUnprocessedNodes='Yes',
                    ParserOptions_ParserVersion='14')
     # run calculation through DFTB+ implemented routParserVersionines
+    optical = set_parallelism(optical, OMP_threads, MPI_cores, verbosity)
     optical.calculate(mol)
 
 
