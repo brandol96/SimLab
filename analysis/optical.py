@@ -117,7 +117,7 @@ def run_casida(mol, OMP_threads, MPI_cores, max_SCC, max_SCC_steps, fermi_fillin
     #Calculator configuration dictionary
     config = {
         # The colon ':' forces ASE to print: ExcitedState { [your_string] }
-        'ExcitedState:': f'Casida{CasidaBlock}',
+        'ExcitedState': f'Casida{CasidaBlock}',
 
         # Keep the rest of your flat keys organized inside the unpacking dictionary
         'Hamiltonian_SCC': 'Yes',
