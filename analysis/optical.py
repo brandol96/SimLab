@@ -107,6 +107,12 @@ def run_casida(mol, max_SCC, max_SCC_steps, fermi_filling,
     Casida  = '\nNrOfExcitations = 200'
     Casida += '\nSymmetry = singlet'
     Casida += '\nDiagonaliser = Arpack{}'
+    CasidaBlock = {"Casida": {"Diagonaliser": "Arpack{}",
+                              "EnergyWindow": cutoff_energy,
+                              "NrOfExcitations": n_excitations,
+                              "OscillatorWindow": cutoff_oscillator,
+                              "Symmetry": "singlet",}
+                   }
     optical = Dftb(atoms=mol,
                    label=f'optical_casida',
                    Hamiltonian_SCC='Yes',
@@ -117,15 +123,7 @@ def run_casida(mol, max_SCC, max_SCC_steps, fermi_filling,
                    Hamiltonian_Mixer_='Anderson',
                    Hamiltonian_Mixer_MixingParameter=5.000000000000000E-002,
                    Hamiltonian_Mixer_Generations=8,
-                   ExcitedState={
-                       "Casida": {
-                           "Diagonaliser": "Arpack{}",
-                           "EnergyWindow": cutoff_energy,
-                           "NrOfExcitations": n_excitations,
-                           "OscillatorWindow": cutoff_oscillator,
-                           "Symmetry": "singlet",
-                       }
-                   },
+                   ExcitedState=CasidaBlock,
                    #ExcitedState_='',
                    #ExcitedState_Casida_='Casida',
                    #ExcitedState_Casida_NrOfExcitations=n_excitations,
