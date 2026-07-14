@@ -100,8 +100,9 @@ def run_laser(mol, max_SCC, max_SCC_steps, fermi_filling,
     optical.calculate(mol)
 
 
-def run_casida(mol, max_SCC, max_SCC_steps, fermi_filling,
-               n_excitations, cutoff_energy, cutoff_oscillator):
+def run_casida(mol, OMP_threads, MPI_cores, max_SCC, max_SCC_steps,
+               fermi_filling, n_excitations, cutoff_energy, cutoff_oscillator,
+               verbosity):
     from ase.calculators.dftb import Dftb
 
     optical = Dftb(atoms=mol,
