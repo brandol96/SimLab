@@ -117,13 +117,22 @@ def run_casida(mol, max_SCC, max_SCC_steps, fermi_filling,
                    Hamiltonian_Mixer_='Anderson',
                    Hamiltonian_Mixer_MixingParameter=5.000000000000000E-002,
                    Hamiltonian_Mixer_Generations=8,
-                   ExcitedState_='',
+                   ExcitedState={
+                       "Casida": {
+                           "Diagonaliser": "Arpack{}",
+                           "EnergyWindow": cutoff_energy,
+                           "NrOfExcitations": n_excitations,
+                           "OscillatorWindow": cutoff_oscillator,
+                           "Symmetry": "singlet",
+                       }
+                   },
+                   #ExcitedState_='',
                    #ExcitedState_Casida_='Casida',
-                   ExcitedState_Casida_NrOfExcitations=n_excitations,
-                   ExcitedState_Casida_EnergyWindow=cutoff_energy,
-                   ExcitedState_Casida_OscillatorWindow=cutoff_oscillator,
-                   ExcitedState_Casida_Symmetry='singlet',
-                   ExcitedState_Casida_Diagonaliser='Arpack{}',
+                   #ExcitedState_Casida_NrOfExcitations=n_excitations,
+                   #ExcitedState_Casida_EnergyWindow=cutoff_energy,
+                   #ExcitedState_Casida_OscillatorWindow=cutoff_oscillator,
+                   #ExcitedState_Casida_Symmetry='singlet',
+                   #ExcitedState_Casida_Diagonaliser='Arpack{}',
                    Options_='',
                    Options_WriteChargesAsText='Yes')
     # run calculation through DFTB+ implemented routines
