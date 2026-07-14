@@ -126,8 +126,8 @@ def run_casida(mol, OMP_threads, MPI_cores, max_SCC, max_SCC_steps,
                    Options_WriteChargesAsText='Yes',
                    ParserOptions_='',
                    ParserOptions_IgnoreUnprocessedNodes='Yes',
-                   ParserOptions_ParserOptions='14')
-    # run calculation through DFTB+ implemented routines
+                   ParserOptions_ParserVersion='14')
+    # run calculation through DFTB+ implemented routParserVersionines
     optical.calculate(mol)
 
 
