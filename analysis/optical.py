@@ -123,7 +123,10 @@ def run_casida(mol, OMP_threads, MPI_cores, max_SCC, max_SCC_steps,
                    ExcitedState_Casida_Symmetry='singlet',
                    ExcitedState_Casida_Diagonaliser='Arpack{}',
                    Options_='',
-                   Options_WriteChargesAsText='Yes')
+                   Options_WriteChargesAsText='Yes',
+                   ParserOptions_='',
+                   ParserOptions_IgnoreUnprocessedNodes_='Yes',
+                   ParserOptions_ParserOptions_='14')
     # run calculation through DFTB+ implemented routines
     optical.calculate(mol)
 
