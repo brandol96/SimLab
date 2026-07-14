@@ -100,44 +100,30 @@ def run_laser(mol, max_SCC, max_SCC_steps, fermi_filling,
     optical.calculate(mol)
 
 
-def run_casida(mol, OMP_threads, MPI_cores, max_SCC, max_SCC_steps, fermi_filling,
-               n_excitations, cutoff_energy, cutoff_oscillator, verbosity):
+def run_casida(mol, max_SCC, max_SCC_steps, fermi_filling,
+               n_excitations, cutoff_energy, cutoff_oscillator):
     from ase.calculators.dftb import Dftb
-    from SimLab.calculator import set_parallelism
 
-    #Define the block
-    CasidaBlock = " {\n"  # Open the Casida block
-    CasidaBlock += "   Diagonaliser = Arpack{}\n"
-    CasidaBlock += "   Symmetry = singlet\n"
-    CasidaBlock += f"   EnergyWindow = {cutoff_energy}\n"
-    CasidaBlock += f"   OscillatorWindow = {cutoff_oscillator}\n"
-    CasidaBlock += f"   NrOfExcitations = {n_excitations}\n"
-    CasidaBlock += " }"
-
-    #Calculator configuration dictionary
-    config = {
-        # The colon ':' forces ASE to print: ExcitedState { [your_string] }
-        'ExcitedState': f'Casida{CasidaBlock}',
-
-        # Keep the rest of your flat keys organized inside the unpacking dictionary
-        'Hamiltonian_SCC': 'Yes',
-        'Hamiltonian_SCCTolerance': max_SCC,
-        'Hamiltonian_ReadInitialCharges': 'Yes',
-        'Hamiltonian_MaxSCCIterations': max_SCC_steps,
-        'Hamiltonian_Filling': f"Fermi{{Temperature [K] = {fermi_filling} }}",
-        'Hamiltonian_Mixer_': 'Anderson',
-        'Hamiltonian_Mixer_MixingParameter': 5.000000000000000E-002,
-        'Hamiltonian_Mixer_Generations': 8,
-        'Options_': '',
-        'Options_WriteChargesAsText': 'Yes'
-    }
-
-    #Instantiate the calculator
     optical = Dftb(atoms=mol,
-                   label='optical_casida',
-                   **config)
+                   label=f'optical_casida',
+                   Hamiltonian_SCC='Yes',
+                   Hamiltonian_SCCTolerance=max_SCC,
+                   Hamiltonian_ReadInitialCharges='Yes',
+                   Hamiltonian_MaxSCCIterations=max_SCC_steps,
+                   Hamiltonian_Filling=f"Fermi{{Temperature [K] = {fermi_filling} }}",
+                   Hamiltonian_Mixer_='Anderson',
+                   Hamiltonian_Mixer_MixingParameter=5.000000000000000E-002,
+                   Hamiltonian_Mixer_Generations=8,
+                   ExcitedState_='',
+                   ExcitedState_Casida_='',
+                   ExcitedState_Casida_NrOfExcitations=n_excitations,
+                   ExcitedState_Casida_EnergyWindow=cutoff_energy,
+                   ExcitedState_Casida_OscillatorWindow=cutoff_oscillator,
+                   ExcitedState_Casida_Symmetry='singlet',
+                   ExcitedState_Casida_Diagonaliser='Arpack{}',
+                   Options_='',
+                   Options_WriteChargesAsText='Yes')
     # run calculation through DFTB+ implemented routines
-    optical = set_parallelism(optical, OMP_threads, MPI_cores, verbosity)
     optical.calculate(mol)
 
 
