@@ -49,7 +49,11 @@ def run_kick(mol, max_SCC, max_SCC_steps, fermi_filling,
 #                   Analysis_ElectrostaticPotential_Grid_GridPoints=f'{n_points} {n_points} 1',
 #                   Analysis_ElectrostaticPotential_Grid_Directions='1 0 0 0 1 0 0 0 1',
                    Options_='',
-                   Options_WriteChargesAsText='Yes')
+                   Options_WriteChargesAsText='Yes',
+                   ParserOptions_='',
+                   ParserOptions_IgnoreUnprocessedNodes='Yes',
+                   ParserOptions_ParserVersion='14'
+                   )
 
     # run calculation through DFTB+ implemented routines
     optical.calculate(mol)
