@@ -366,7 +366,7 @@ def run_casida_pure(method, out_path, mol_name,
     plt.tight_layout()
 
     leg = ax.legend(handlelength=0, handletextpad=0, fancybox=True)
-    for item in leg.legendHandles:
+    for item in leg.legend_handles:
         item.set_visible(False)
 
     fig.savefig(f'{out_path}{method}_{mol_name}_Casida.png')
