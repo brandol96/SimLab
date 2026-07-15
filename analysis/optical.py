@@ -18,6 +18,7 @@ def get_grid_origin(mol, n_points):
 def run_kick(mol, max_SCC, max_SCC_steps, fermi_filling,
              total_time, time_step, field_strength, n_points, direction):
     from ase.calculators.dftb import Dftb
+    from SimLab.calculator import set_parallelism
 
     # writing DFTB electron dynamics manually
     totalSteps = int(total_time / time_step)
