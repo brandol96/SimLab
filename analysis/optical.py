@@ -15,8 +15,8 @@ def get_grid_origin(mol, n_points):
     return grid_O, grid_S
 
 
-def run_kick(mol, max_SCC, max_SCC_steps, fermi_filling,
-             total_time, time_step, field_strength, n_points, direction):
+def run_kick(mol, OMP_threads, MPI_cores, max_SCC, max_SCC_steps, fermi_filling,
+             total_time, time_step, field_strength, n_points, direction, verbosity):
     from ase.calculators.dftb import Dftb
     from SimLab.calculator import set_parallelism
 
@@ -57,6 +57,7 @@ def run_kick(mol, max_SCC, max_SCC_steps, fermi_filling,
                    )
 
     # run calculation through DFTB+ implemented routines
+    optical = set_parallelism(optical, OMP_threads, MPI_cores, verbosity)
     optical.calculate(mol)
 
 

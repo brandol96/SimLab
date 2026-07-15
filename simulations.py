@@ -142,8 +142,8 @@ def start_sim(mol, mol_name, out_path, **kwargs):
                     # the desired directions 'XYZ', 'XY', 'ZY', etc...
                     for direction in directions:
                         print(f'current direction: {direction}')
-                        optical.run_kick(mol, max_SCC, max_SCC_steps, fermi_filling,
-                                         total_time, time_step, field_strength, n_points, direction)
+                        optical.run_kick(mol, OMP_threads, MPI_cores, max_SCC, max_SCC_steps, fermi_filling,
+                                         total_time, time_step, field_strength, n_points, direction, verbosity)
                 elif sim_type == 'laser':
                     print(f'current direction: {directions}')
                     # calculation using kick expects direction a list of direction intensities
