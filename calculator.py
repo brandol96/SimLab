@@ -6,8 +6,8 @@ def set_parallelism(calc,OMP_threads,MPI_cores,verbosity):
         os.environ["OPENBLAS_NUM_THREADS"] = "1"
         dftb_mpi = os.environ["DFTB_MPI"]
         dftb_mpi_lib = os.environ["DFTB_MPI_LIB"]
-        print(f'mpiexec -np {MPI_cores} dftb+ > PREFIX.out')
         inline_env = f"LD_LIBRARY_PATH={dftb_mpi_lib}"
+        print(f'mpiexec -np {MPI_cores} dftb+ > PREFIX.out')
         if verbosity > 2:
             calc.command = f'{inline_env} mpiexec -np {MPI_cores} -x LD_LIBRARY_PATH {dftb_mpi} | tee PREFIX.out'
         else:
@@ -20,13 +20,15 @@ def set_parallelism(calc,OMP_threads,MPI_cores,verbosity):
         os.environ["OMP_PLACES"] = 'cores'
         os.environ["OPENBLAS_NUM_THREADS"] = str(OMP_threads)
         dftb_omp = os.environ["DFTB_OMP"]
+        dftb_omp_lib = os.environ["DFTB_OMP_LIB"]
+        inline_env = f"LD_LIBRARY_PATH={dftb_omp_lib}"
         calc.set(Parallel_='',
                  Parallel_UseOmpThreads='Yes')
         print(os.environ["ASE_DFTB_COMMAND"])
         if verbosity > 2:
-            calc.command = f'{dftb_omp} | tee PREFIX.out'
+            calc.command = f'{inline_env} {dftb_omp} | tee PREFIX.out'
         else:
-            calc.command = f'{dftb_omp} > PREFIX.out'
+            calc.command = f'{inline_env} {dftb_omp} > PREFIX.out'
 
         return calc
 
