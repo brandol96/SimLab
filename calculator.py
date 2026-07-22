@@ -12,6 +12,9 @@ def set_parallelism(calc,OMP_threads,MPI_cores,verbosity):
     else:
         os.environ["ASE_DFTB_COMMAND"] = f'dftb+ > PREFIX.out'
         os.environ["OMP_NUM_THREADS"] = str(OMP_threads)
+        os.environ["OMP_PROC_BIND"] = 'true'
+        os.environ["OMP_PLACES"] = 'cores'
+        os.environ["OPENBLAS_NUM_THREADS"] = str(OMP_threads)
         calc.set(Parallel_='',
                  Parallel_UseOmpThreads='Yes')
         print(os.environ["ASE_DFTB_COMMAND"])
