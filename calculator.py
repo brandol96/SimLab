@@ -9,9 +9,9 @@ def set_parallelism(calc,OMP_threads,MPI_cores,verbosity):
         print(f'mpiexec -np {MPI_cores} dftb+ > PREFIX.out')
         inline_env = f"LD_LIBRARY_PATH={dftb_mpi_lib}"
         if verbosity > 2:
-            calc.command = f'{inline_env} mpiexec -np {MPI_cores} -x LD_LIBRARY_PATH {dftb_mpi} | tee PREFIX.out'
+            calc.command = f'export={inline_env} mpiexec -np {MPI_cores} -x LD_LIBRARY_PATH {dftb_mpi} | tee PREFIX.out'
         else:
-            calc.command = f'{inline_env} mpiexec -np {MPI_cores} -x LD_LIBRARY_PATH {dftb_mpi} > PREFIX.out'
+            calc.command = f'export={inline_env} mpiexec -np {MPI_cores} -x LD_LIBRARY_PATH {dftb_mpi} > PREFIX.out'
         return calc
     else:
         os.environ["ASE_DFTB_COMMAND"] = f'dftb_omp > PREFIX.out'
