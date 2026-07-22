@@ -25,6 +25,21 @@ def nearest_index(ref_list, number):
     return i
 
 
+def find_peaks(X,Y):
+    # given a curve defined by point (x,y) ordered in two distinct
+    # lists X = [x1,x2,x3] and Y = [y1,y2,y3]. Find the pairs (xn,yn)
+    # representing peaks of this curve by reading from left to right
+    # where Y[n] > Y[n - 1] and Y[n] > Y[n + 1]
+
+    N = len(Y)
+    X_peaks = []
+    Y_peaks = []
+    for n in range(1, N - 1):
+        if Y[n] > Y[n - 1] and Y[n] > Y[n + 1]:
+            X_peaks.append(X[n])
+            Y_peaks.append(Y[n])
+    return X_peaks, Y_peaks
+
 def path_dftb(path, dK, mol, verbose, get_dict):
     import numpy as np
     path2kpts = {'G': [0.0, 0.0, 0.0],

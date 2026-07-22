@@ -1,19 +1,7 @@
 from scipy import linalg, constants
+from SimLab.read import optical
 import matplotlib.pyplot as plt
 import numpy as np
-
-
-def read_spec_ev(path, x_range):
-    x = []
-    y = []
-    with open(f'{path}spec-ev.dat') as inp:
-        for line in inp:
-            data = line.split()
-            if float(data[0]) >= x_range[0] and float(data[0]) <= x_range[1]:
-                x.append(float(data[0]))
-                y.append(float(data[1]))
-    return x, y
-
 
 def run_kick(method, out_path, mol_name, interactive_plot, directions, fourier_damp, field_strength):
     # a few parameters
@@ -107,7 +95,7 @@ def run_kick(method, out_path, mol_name, interactive_plot, directions, fourier_d
     del energsev
 
     # read and plot the spectrum
-    X, Y = read_spec_ev(out_path, x_range)
+    X, Y = optical.read_spec_ev(out_path, x_range)
     plt.plot(X, Y, 'o-', markersize=2)
 
     # we want to evaluate where are the peaks to save their absorption and
@@ -192,7 +180,15 @@ def run_casida(method, out_path, mol_name, cutoff_OscStr, cutoff_weight,
     fig = plt.figure()  # start a figure
     fig.suptitle(mol_name.replace("_", " "), fontsize=title_font)
 
-    energies, transitions = read_casida(out_path, cutoff_OscStr, cutoff_weight, energy_upper_plot)
+    casida_list = optical.read_casida(out_path, cutoff_OscStr, cutoff_weight, energy_upper_plot,
+                                      False, True)
+    # each entry in casida list has format:
+    # [peak,energy, transition, weight, oscilator]
+    energies = []
+    transitions = []
+    for entry in casida_list:
+        energies.append(entry[1])
+        transitions.append(entry[2])
 
     # get plot range from casida results
     x_range = [0.0, 1.2 * energy_upper_plot]
@@ -231,45 +227,6 @@ def run_casida(method, out_path, mol_name, cutoff_OscStr, cutoff_weight,
         plt.show()
     else:
         plt.clf()
-
-
-def read_casida(out_path, X_peaks, cutoff_OscStr, cutoff_weight, energy_upper_plot):
-    energies = []
-    transitions = []
-    casida_list = []
-
-    with open(f'{out_path}EXC.DAT') as casida:
-        for line in casida:
-            data = line.split()
-            if '->' in data:
-                energy = float(data[0])
-                weight = float(data[5])
-                oscilator = float(data[1])
-                transition = [int(data[2]), int(data[4])]
-                casida_list.append([energy, transition, weight, oscilator])
-                if energy > energy_upper_plot:
-                    break
-                else:
-                    if weight >= cutoff_weight and oscilator >= cutoff_OscStr:
-                        energies.append(energy)
-                        transitions.append(transition)
-                        print(f'{energy},{transition},{weight},{oscilator}',
-                              file=open(f'{out_path}casida_filtered.out', 'a'))
-
-    with open(f'{out_path}casida_peaks.out','w+') as out_file:
-        for peak in X_peaks:
-            i = 0
-            for energy, transition, weight, oscilator in casida_list:
-                if energy > peak:
-                    out_file.write(f'\npeak center: {peak:.3f}\n')
-                    out_file.write('energy,transition,weight,oscilator\n')
-                    aux = casida_list[i-3:i+3]
-                    for entry in aux:
-                        out_file.write(f'{entry[0]:.3f},{entry[1]},{entry[2]:.3f},{entry[3]:.8f}\n')
-                    break
-                i += 1
-
-    return energies, transitions
 
 
 def run_casida_pure(method, out_path, mol_name,
