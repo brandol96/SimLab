@@ -5,12 +5,12 @@ def set_parallelism(calc,OMP_threads,MPI_cores,verbosity):
         os.environ["OMP_NUM_THREADS"] = "1"
         print(f'mpiexec -np {MPI_cores} dftb+ > PREFIX.out')
         if verbosity > 2:
-            calc.command = f'mpiexec -np {MPI_cores} dftb+ | tee PREFIX.out'
+            calc.command = f'mpiexec -np {MPI_cores} dftb_mpi | tee PREFIX.out'
         else:
-            calc.command = f'mpiexec -np {MPI_cores} dftb+ > PREFIX.out'
+            calc.command = f'mpiexec -np {MPI_cores} dftb_mpi > PREFIX.out'
         return calc
     else:
-        os.environ["ASE_DFTB_COMMAND"] = f'dftb+ > PREFIX.out'
+        os.environ["ASE_DFTB_COMMAND"] = f'dftb_omp > PREFIX.out'
         os.environ["OMP_NUM_THREADS"] = str(OMP_threads)
         os.environ["OMP_PROC_BIND"] = 'true'
         os.environ["OMP_PLACES"] = 'cores'
