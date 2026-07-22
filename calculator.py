@@ -3,11 +3,13 @@ def set_parallelism(calc,OMP_threads,MPI_cores,verbosity):
     import os
     if MPI_cores != 1:
         os.environ["OMP_NUM_THREADS"] = "1"
+        os.environ["OPENBLAS_NUM_THREADS"] = "1"
+        dftb_mpi = os.environ["DFTB_MPI"]
         print(f'mpiexec -np {MPI_cores} dftb+ > PREFIX.out')
         if verbosity > 2:
-            calc.command = f'mpiexec -np {MPI_cores} dftb_mpi | tee PREFIX.out'
+            calc.command = f'mpiexec -np {MPI_cores} {dftb_mpi} | tee PREFIX.out'
         else:
-            calc.command = f'mpiexec -np {MPI_cores} dftb_mpi > PREFIX.out'
+            calc.command = f'mpiexec -np {MPI_cores} {dftb_mpi} > PREFIX.out'
         return calc
     else:
         os.environ["ASE_DFTB_COMMAND"] = f'dftb_omp > PREFIX.out'
@@ -15,13 +17,14 @@ def set_parallelism(calc,OMP_threads,MPI_cores,verbosity):
         os.environ["OMP_PROC_BIND"] = 'true'
         os.environ["OMP_PLACES"] = 'cores'
         os.environ["OPENBLAS_NUM_THREADS"] = str(OMP_threads)
+        dftb_omp = os.environ["DFTB_OMP"]
         calc.set(Parallel_='',
                  Parallel_UseOmpThreads='Yes')
         print(os.environ["ASE_DFTB_COMMAND"])
         if verbosity > 2:
-            calc.command = f'dftb+ | tee PREFIX.out'
+            calc.command = f'{dftb_omp} | tee PREFIX.out'
         else:
-            calc.command = f'dftb+ > PREFIX.out'
+            calc.command = f'{dftb_omp} > PREFIX.out'
 
         return calc
 
