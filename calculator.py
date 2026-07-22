@@ -5,11 +5,13 @@ def set_parallelism(calc,OMP_threads,MPI_cores,verbosity):
         os.environ["OMP_NUM_THREADS"] = "1"
         os.environ["OPENBLAS_NUM_THREADS"] = "1"
         dftb_mpi = os.environ["DFTB_MPI"]
+        dftb_mpi_lib = os.environ["DFTB_MPI_LIB"]
         print(f'mpiexec -np {MPI_cores} dftb+ > PREFIX.out')
+        inline_env = f"LD_LIBRARY_PATH={dftb_mpi_lib}"
         if verbosity > 2:
-            calc.command = f'mpiexec -np {MPI_cores} {dftb_mpi} | tee PREFIX.out'
+            calc.command = f'{inline_env} mpiexec -np {MPI_cores} -x LD_LIBRARY_PATH {dftb_mpi} | tee PREFIX.out'
         else:
-            calc.command = f'mpiexec -np {MPI_cores} {dftb_mpi} > PREFIX.out'
+            calc.command = f'{inline_env} mpiexec -np {MPI_cores} -x LD_LIBRARY_PATH {dftb_mpi} > PREFIX.out'
         return calc
     else:
         os.environ["ASE_DFTB_COMMAND"] = f'dftb_omp > PREFIX.out'
