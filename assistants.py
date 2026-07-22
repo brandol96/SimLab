@@ -88,7 +88,7 @@ class Cody:
             cutoff_OscStr=kwargs.get('cutoff_OscStr', 0.001),
             cutoff_weight=kwargs.get('cutoff_weight', 0.8),
             energy_upper_plot=kwargs.get('energy_upper_plot', 2.0),
-            spec_range=kwargs.get('spec_range',[0.0,6.0])
+            spec_range=kwargs.get('spec_range',[0.0,6.0]),
 
             # coulomb potential
             n_points=kwargs.get('n_points', 1),
