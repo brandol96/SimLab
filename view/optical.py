@@ -3,13 +3,13 @@ from SimLab.read import optical
 import matplotlib.pyplot as plt
 import numpy as np
 
-def run_kick(method, out_path, mol_name, interactive_plot, directions, fourier_damp, field_strength):
+def run_kick(method, out_path, mol_name, interactive_plot, directions, fourier_damp, field_strength, spec_range):
     # a few parameters
     zoom = 6
     title_font = 20
     label_font = 16
     text_font = 14
-    x_range = [0, 6]
+    x_range = spec_range
 
     print('\n\nstart plot\n\n')
     # setup figure

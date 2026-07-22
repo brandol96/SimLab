@@ -214,6 +214,7 @@ def start_view(mol, mol_name, out_path, **kwargs):
             cutoff_OscStr = kwargs.get('cutoff_OscStr')
             cutoff_weight = kwargs.get('cutoff_weight')
             energy_upper_plot = kwargs.get('energy_upper_plot')
+            spec_range = kwargs.get('spec_range')
             print(f'{method} {sim_type} optical absorption for {mol_name}')
 
             pbc = mol.get_pbc()
@@ -226,7 +227,7 @@ def start_view(mol, mol_name, out_path, **kwargs):
                     # the output info from kick optical simulation is the full spectra
                     # as well as the location of possible absorption peaks
                     optical.run_kick(method, out_path, mol_name,
-                                     interactive_plot, directions, fourier_damp, field_strength)
+                                     interactive_plot, directions, fourier_damp, field_strength, spec_range)
                 elif sim_type == 'laser':
                     # the output info from laser optical simulation is the polarization response
                     # of the material to the laser excitation and
