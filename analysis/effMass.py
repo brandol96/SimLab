@@ -131,6 +131,9 @@ def run(method, mol, mol_name, out_path, BZ_step, interactive_plot):
             y_homo.append(point[idx_homo] * eV_to_Joule)
             y_lumo.append(point[idx_lumo + 1] * eV_to_Joule)
             n += 1
+        homo = [find_homo(y_homo), float(idx_homo), round(max(y_homo) * Joule_to_eV, 3)]
+        lumo = [find_lumo(y_lumo), float(idx_lumo + 1), round(min(y_lumo) * Joule_to_eV, 3)]
+
     else:
         print('total filled band')
         for point in band_data:
@@ -138,12 +141,12 @@ def run(method, mol, mol_name, out_path, BZ_step, interactive_plot):
             y_homo.append(point[idx_homo] * eV_to_Joule)
             y_lumo.append(point[idx_lumo] * eV_to_Joule)
             n += 1
+        homo = [find_homo(y_homo), float(idx_homo), round(max(y_homo) * Joule_to_eV, 3)]
+        lumo = [find_lumo(y_lumo), float(idx_lumo), round(min(y_lumo) * Joule_to_eV, 3)]
 
     print(max(y_homo))
     print(min(y_lumo))
 
-    homo = [find_homo(y_homo), float(idx_homo    ), round(max(y_homo) * Joule_to_eV, 3)]
-    lumo = [find_lumo(y_lumo), float(idx_lumo + 1), round(min(y_lumo) * Joule_to_eV, 3)]
 
     # output basic bands
     print(f'Read homo: {homo}')
