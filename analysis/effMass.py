@@ -142,7 +142,7 @@ def run(method, mol, mol_name, out_path, BZ_step, interactive_plot):
     print(max(y_homo))
     print(min(y_lumo))
 
-    homo = [find_homo(y_homo), float(idx_homo + 1), round(max(y_homo) * Joule_to_eV, 3)]
+    homo = [find_homo(y_homo), float(idx_homo    ), round(max(y_homo) * Joule_to_eV, 3)]
     lumo = [find_lumo(y_lumo), float(idx_lumo + 1), round(min(y_lumo) * Joule_to_eV, 3)]
 
     # output basic bands
