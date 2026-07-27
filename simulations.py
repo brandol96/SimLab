@@ -97,6 +97,7 @@ def start_sim(mol, mol_name, out_path, **kwargs):
             print(f'{method} band structure for {mol_name}')
             opt_out_path = f'optimize_{method}_{mol_name}{os.sep}'
             shutil.copyfile(f'{opt_out_path}charges.bin', f'{os.getcwd()}{os.sep}charges.bin')
+            opt_mol = read(f'{opt_out_path}geo_end.gen')
             pbc = mol.get_pbc()
 
             if True in pbc:
@@ -105,12 +106,12 @@ def start_sim(mol, mol_name, out_path, **kwargs):
                 BZ_path = kwargs.get('BZ_path')
                 BZ_step = kwargs.get('BZ_step')
                 verbosity = kwargs.get('verbosity')
-                sampling = path_dftb(BZ_path, BZ_step, mol, verbosity, False)
+                sampling = path_dftb(BZ_path, BZ_step, opt_mol, verbosity, False)
                 print(f'\nSome direction has pbc, I\'ll use the provided path: {BZ_path} and step: {BZ_step}')
                 print(f'Path generated:\n\n{sampling}')
                 print(f'Use verbosity >= 3 for more details...')
                 bands.run(OMP_threads, MPI_cores, verbosity,
-                          mol, mol_name, sampling, label)
+                          opt_mol, mol_name, sampling, label)
 
             print('\n\n')
 
