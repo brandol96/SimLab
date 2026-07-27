@@ -111,6 +111,8 @@ def run(method, mol, mol_name, out_path, BZ_step, interactive_plot):
     band_data = np.genfromtxt(f'{out_path}{mol_name}.band_tot.dat')
     homo, lumo, gap, fermi_e = utils.read_fermi_levels_dftb(out_path, mol_name)
 
+    print(len(band_data))
+
     # variables
     x = []
     idx_homo = int(homo[1])
