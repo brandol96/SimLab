@@ -93,6 +93,7 @@ def start_sim(mol, mol_name, out_path, **kwargs):
                                    SCC, max_SCC, max_SCC_steps, fermi_filling,verbosity)
 
         elif simulation == 'bands':
+            label = kwargs.get('label')
             print(f'{method} band structure for {mol_name}')
             opt_out_path = f'optimize_{method}_{mol_name}{os.sep}'
             shutil.copyfile(f'{opt_out_path}charges.bin', f'{os.getcwd()}{os.sep}charges.bin')
@@ -109,7 +110,7 @@ def start_sim(mol, mol_name, out_path, **kwargs):
                 print(f'Path generated:\n\n{sampling}')
                 print(f'Use verbosity >= 3 for more details...')
                 bands.run(OMP_threads, MPI_cores, verbosity,
-                          mol, mol_name, sampling)
+                          mol, mol_name, sampling, label)
 
             print('\n\n')
 
