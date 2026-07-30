@@ -110,6 +110,7 @@ def read_dos_dftb(path, mol_name, return_eigen=False):
     i = 0
     print('read DOS')
     eigen_list = []
+    eigen_occs = []
     with open(f'{path}{mol_name}.dos.dat') as file:
         for line in file:
             data = line.split()
@@ -121,8 +122,9 @@ def read_dos_dftb(path, mol_name, return_eigen=False):
             data = line.split()
             if len(data) == 3:
                 eigen_list.append(float(data[1]))
+                eigen_occs.append(float(data[2]))
     if return_eigen:
-        return ene, dos, eigen_list
+        return ene, dos, eigen_list, eigen_occs
     else:
         return ene, dos
 

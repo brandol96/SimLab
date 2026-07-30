@@ -6,7 +6,8 @@ from SimLab.utils import read_fermi_levels_dftb
 
 def run_dftb(mol, mol_name, out_path, interactive_plot, dos_range):
     os.system(f'dp_dos {out_path}band.out {out_path}{mol_name}.dos.dat')
-    ene, dos, eigen = read_dos_dftb(out_path, mol_name, True)
+
+    ene, dos, eigen, eigen_occs = read_dos_dftb(out_path, mol_name, True)
     homo, lumo, gap, fermi_e = read_fermi_levels_dftb(out_path, mol_name)
 
     # setup figure

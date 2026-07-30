@@ -169,6 +169,8 @@ def start_view(mol, mol_name, out_path, **kwargs):
     OMP_threads = kwargs.get('OMP_threads')
     MPI_cores = kwargs.get('MPI_cores')
     verbosity = kwargs.get('verbosity')
+    BZ_path = kwargs.get('BZ_path')
+    BZ_step = hwargs.get('BZ_step')
     if method == 'DFTB':
         if simulation == 'optimize':
             from SimLab.view import DOS
