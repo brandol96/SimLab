@@ -5,30 +5,6 @@ from SimLab.utils import read_dos_dftb
 from SimLab.utils import read_fermi_levels_dftb
 from SimLab.utils import output_fermi_levels_dftb
 
-    # setup figure
-    fig = plt.figure(1, figsize=(10, 12.5))  # start a figure
-    # fig.suptitle(mol_name.replace("_", " ") + ' band structure')
-
-    # bands axes
-    ax = fig.add_axes([.12, .07, .67, .85])  # axes [left, bottom, width, height]
-    ax.set_xticks([])
-    ax.set_ylabel(f'$E - E_f$ (eV) |  gap: {gap} eV', fontsize=fontsize)
-    if zoom > 0:
-        ax.set_ylim([-zoom, +zoom])
-
-    # dos axes
-    dosax = fig.add_axes([.8, .07, .17, .85])  # axes [left, bottom, width, height]
-    dosax.fill_between(dos, ene, color='black')
-    dosax.set_yticks([])
-    dosax.set_xticks([])
-    dosax.set_xlabel("DOS", fontsize=fontsize)
-    if zoom > 0:
-        dosax.set_ylim([-zoom, +zoom])
-
-    # plot bands and dos
-    for i in range(band_data.shape[1] - 1):
-        ax.plot(band_data[:, 0], band_data[:, i + 1], color='#272222')
-    dosax.plot(dos, ene, color='#272222')
 
 def run_dftb(mol, mol_name, out_path, zoom, path, dK,
              interactive_plot, verbosity):
