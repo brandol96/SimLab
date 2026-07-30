@@ -5,13 +5,6 @@ from SimLab.utils import read_dos_dftb
 from SimLab.utils import read_fermi_levels_dftb
 from SimLab.utils import output_fermi_levels_dftb
 
-
-def run_dftb_cluster(mol, mol_name, out_path, zoom, path, dK,
-             interactive_plot, verbosity):
-    band_data = np.genfromtxt(f'{out_path}{mol_name}.band_tot.dat')
-    ene, dos = read_dos_dftb(out_path, mol_name)
-    homo, lumo, gap, fermi_e = read_fermi_levels_dftb(out_path, mol_name, verbosity)
-
     # setup figure
     fig = plt.figure(1, figsize=(10, 12.5))  # start a figure
     # fig.suptitle(mol_name.replace("_", " ") + ' band structure')
