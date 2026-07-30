@@ -182,18 +182,21 @@ def start_view(mol, mol_name, out_path, **kwargs):
 
         if simulation == 'bands':
             from SimLab.view import bands
-            print(f'View: {method} band structure for {mol_name}')
+
             pbc = mol.get_pbc()
             if True in pbc:
                 BZ_path = kwargs.get('BZ_path')
                 BZ_step = kwargs.get('BZ_step')
                 bands_zoom = kwargs.get('bands_zoom')
                 verbosity = kwargs.get('verbosity')
+                print(f'View: {method} band structure for {mol_name}')
                 print(f'\nSome direction has pbc, I\'ll use the provided path: {BZ_path} and step: {BZ_step}')
                 bands.run_dftb(mol, mol_name, out_path, bands_zoom, BZ_path, BZ_step,
                                interactive_plot,verbosity)
             else:
-                print('No direction has pbc, the molecule is invalid you silly!')
+                print('No direction has pbc, the resulting plot is of the band.out without treatment')
+                bands.run_dftb_cluster(mol, mol_name, out_path, bands_zoom, BZ_path, BZ_step,
+                               interactive_plot, verbosity)
 
         if simulation == 'effMass':
             from SimLab.analysis import effMass
