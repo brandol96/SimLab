@@ -24,7 +24,8 @@ def set_parallelism(calc,OMP_threads,MPI_cores,verbosity):
         inline_env = f"LD_LIBRARY_PATH={dftb_omp_lib}"
         calc.set(Parallel_='',
                  Parallel_UseOmpThreads='Yes')
-        print(os.environ["ASE_DFTB_COMMAND"])
+        print(dftb_omp_bin)
+        print(dftb_omp_lib)
         if verbosity > 2:
             calc.command = f'{inline_env} {dftb_omp_bin}dftb+ | tee PREFIX.out'
         else:
