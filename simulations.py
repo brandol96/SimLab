@@ -168,6 +168,7 @@ def start_view(mol, mol_name, out_path, **kwargs):
     interactive_plot = kwargs.get('interactive_plot')
     OMP_threads = kwargs.get('OMP_threads')
     MPI_cores = kwargs.get('MPI_cores')
+    verbosity = kwargs.get('verbosity')
     if method == 'DFTB':
         if simulation == 'optimize':
             from SimLab.view import DOS
