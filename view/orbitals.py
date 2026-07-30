@@ -1,6 +1,28 @@
 import numpy as np
 import os
 import shutil
+def run_waveplot_parallelism(OMP_threads,MPI_cores,verbosity):
+    if MPI_cores != 1:
+        dftb_mpi_bin = os.environ["DFTB_MPI"]
+        dftb_mpi_lib = os.environ["DFTB_MPI_LIB"]
+        inline_env = f"LD_LIBRARY_PATH={dftb_mpi_lib}"
+        if verbosity > 2:
+            os.system(f'{inline_env} {dftb_mpi_bin}waveplot | tee waveplot.out')
+        else:
+            os.system(f'{inline_env} {dftb_mpi_bin}waveplot > waveplot.out')
+        return
+    else:
+        os.environ["OMP_PROC_BIND"] = 'true'
+        os.environ["OMP_PLACES"] = 'cores'
+        os.environ["OPENBLAS_NUM_THREADS"] = str(OMP_threads)
+        os.environ["OMP_NUM_THREADS"] = str(OMP_threads)
+        dftb_omp_bin = os.environ["DFTB_OMP"]
+        dftb_omp_lib = os.environ["DFTB_OMP_LIB"]
+        if verbosity > 2:
+            os.system(f'{inline_env} {dftb_mpi_bin}waveplot | tee waveplot.out')
+        else:
+            os.system(f'{inline_env} {dftb_mpi_bin}waveplot > waveplot.out')
+        return
 
 
 def write_waveplot(path,orbitals,KPTs,WP_grid,WP_Box_View,periodic,SKfiles):
@@ -27,7 +49,9 @@ def write_waveplot(path,orbitals,KPTs,WP_grid,WP_Box_View,periodic,SKfiles):
             else:
                 inp.write(line)
 
-def run(Homo, Lumo, opt_path, orb_path, homo_max_kpt, lumo_min_kpt, WP_grid, WP_Box_View, periodic, SKfiles):
+def run(Homo, Lumo, opt_path, orb_path, homo_max_kpt, lumo_min_kpt,
+        WP_grid, WP_Box_View, periodic, SKfiles,
+        OMP_threads,MPI_cores,verbosity):
     i = 0
     N = len(Homo) - 1
     current_path = os.getcwd()

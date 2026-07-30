@@ -83,7 +83,7 @@ def run_kick(method, out_path, mol_name, interactive_plot, directions, fourier_d
     absorption = -2.0 * energsev * spec.imag / np.pi / field
     energsnm = constants.nu2lambda(frec[1:]) * 1.0E9
 
-    emin = 0.5
+    emin = 0.1
     emax = 30.
     wvlmin = hplanck * cspeednm / emax
     wvlmax = hplanck * cspeednm / emin

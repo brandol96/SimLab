@@ -166,6 +166,8 @@ def start_view(mol, mol_name, out_path, **kwargs):
     simulation = kwargs.get('simulation')
     method = kwargs.get('method')
     interactive_plot = kwargs.get('interactive_plot')
+    OMP_threads = kwargs.get('OMP_threads')
+    MPI_cores = kwargs.get('MPI_cores')
     if method == 'DFTB':
         if simulation == 'optimize':
             from SimLab.view import DOS
@@ -284,15 +286,11 @@ def start_view(mol, mol_name, out_path, **kwargs):
             SKfiles = kwargs.get('SKFiles')
             if True in pbc:
                 periodic = True
-                orbitals.run(homo_list, lumo_list,
-                             opt_out_path, orb_path,
-                             homo_max_kpt, lumo_min_kpt,
-                             WP_grid, WP_Box_View,
-                             periodic, SKfiles)
+                orbitals.run(homo_list, lumo_list, opt_out_path, orb_path, homo_max_kpt, lumo_min_kpt,
+                             WP_grid, WP_Box_View, periodic, SKfiles,
+                             OMP_threads,MPI_cores,verbosity)
             else:
                 periodic = False
-                orbitals.run(homo_list, lumo_list,
-                             opt_out_path, orb_path,
-                             homo_max_kpt, lumo_min_kpt,
-                             WP_grid, WP_Box_View,
-                             periodic, SKfiles)
+                orbitals.run(homo_list, lumo_list, opt_out_path, orb_path, homo_max_kpt, lumo_min_kpt,
+                             WP_grid, WP_Box_View, periodic, SKfiles,
+                             OMP_threads,MPI_cores,verbosity)

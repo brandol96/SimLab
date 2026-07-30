@@ -86,7 +86,6 @@ def find_homo(y_homo):
 def find_lumo(y_lumo):
     # aux_idx: a list of the indexes of minimum values of y_lumo in appearance order
     aux_idx = [i for i, x in enumerate(y_lumo) if x == min(y_lumo)]
-
     # if there's a single lumo point just go back
     if len(aux_idx) == 1:
         return aux_idx[0]
@@ -99,6 +98,7 @@ def find_lumo(y_lumo):
             # I've found a case with two single point regions for HOMO/LUMO
             # consequently the i-th index returned should not be a mean
             # but the first test does not pick this case
+        if aux_idx[i + 1] != aux_idx[i] + 1:
             if aux_idx[0:i]:
                 lumo_idx = int(statistics.mean(aux_idx[0:i]))
                 return lumo_idx
@@ -108,15 +108,17 @@ def find_lumo(y_lumo):
 
 def run(method, mol, mol_name, out_path, BZ_step, interactive_plot):
     # load relevant data
+    # band_data is nxy format: [ [x1 y11 y12 y13 ...] [ x2 y21 y22 y23 ... ] ]
+    # this list in indexed directly by KPT number, meaning
+    # band_data[n] = [ [x(n+1) y(n+1)1 y(n+1)2 y(n+1)3 ...] ]
+    # because python idexing start at 0 and the output kpt map starts at 1
     band_data = np.genfromtxt(f'{out_path}{mol_name}.band_tot.dat')
     homo, lumo, gap, fermi_e = utils.read_fermi_levels_dftb(out_path, mol_name)
 
-    print(len(band_data))
-
     # variables
     x = []
-    idx_homo = int(homo[1])
-    idx_lumo = int(lumo[1])
+    homo_band = int(homo[1])
+    lumo_band = int(lumo[1])
     y_homo = []
     y_lumo = []
     n = 0
@@ -126,29 +128,25 @@ def run(method, mol, mol_name, out_path, BZ_step, interactive_plot):
     Joule_to_eV = 1 / 1.60218E-19
 
     # get HOMO and LUMO bands
-    if idx_lumo == idx_homo:
+    if lumo_band == homo_band:
         print('half-filled band')
         for point in band_data:
             x.append(n * BZ_step * 2 * np.pi * 1E10)
-            y_homo.append(point[idx_homo] * eV_to_Joule)
-            y_lumo.append(point[idx_lumo + 1] * eV_to_Joule)
+            y_homo.append(point[homo_band + 0] * eV_to_Joule)
+            y_lumo.append(point[lumo_band + 1] * eV_to_Joule)
             n += 1
-        homo = [find_homo(y_homo), float(idx_homo), round(max(y_homo) * Joule_to_eV, 3)]
-        lumo = [find_lumo(y_lumo), float(idx_lumo + 1), round(min(y_lumo) * Joule_to_eV, 3)]
+        homo = [find_homo(y_homo), float(homo_band), round(max(y_homo) * Joule_to_eV, 3)]
+        lumo = [find_lumo(y_lumo), float(lumo_band + 1), round(min(y_lumo) * Joule_to_eV, 3)]
 
     else:
         print('total filled band')
         for point in band_data:
             x.append(n * BZ_step * 2 * np.pi * 1E10)
-            y_homo.append(point[idx_homo] * eV_to_Joule)
-            y_lumo.append(point[idx_lumo] * eV_to_Joule)
+            y_homo.append(point[homo_band] * eV_to_Joule)
+            y_lumo.append(point[lumo_band] * eV_to_Joule)
             n += 1
-        homo = [find_homo(y_homo), float(idx_homo), round(max(y_homo) * Joule_to_eV, 3)]
-        lumo = [find_lumo(y_lumo), float(idx_lumo), round(min(y_lumo) * Joule_to_eV, 3)]
-
-    print(max(y_homo))
-    print(min(y_lumo))
-
+        homo = [find_homo(y_homo), float(homo_band), round(max(y_homo) * Joule_to_eV, 3)]
+        lumo = [find_lumo(y_lumo), float(lumo_band), round(min(y_lumo) * Joule_to_eV, 3)]
 
     # output basic bands
     print(f'Read homo: {homo}')
@@ -159,8 +157,8 @@ def run(method, mol, mol_name, out_path, BZ_step, interactive_plot):
     # fit parameters and plot homo and lumo bands
     npoints = int(0.05 * len(x))
 
-    lumo_idx = lumo[0]
-    homo_idx = homo[0]
+    lumo_idx = lumo[0]-1
+    homo_idx = homo[0]-1
 
     # if we're lacking left points extend the band
 
@@ -176,9 +174,9 @@ def run(method, mol, mol_name, out_path, BZ_step, interactive_plot):
         x = [d * BZ_step * 2 * np.pi * 1E10 for d in x]
         y_homo = y_homo[len(y_homo) - safety - 1: len(y_homo)] + y_homo
         y_lumo = y_lumo[len(y_lumo) - safety - 1: len(y_homo)] + y_lumo
-        homo = [find_homo(y_homo), float(idx_homo + 1), round(max(y_homo) * Joule_to_eV, 3)]
-        lumo = [find_lumo(y_lumo), float(idx_lumo + 1), round(min(y_lumo) * Joule_to_eV, 3)]
-        print('\nHOMO was extended')
+        homo = [find_homo(y_homo), float(homo_band), round(max(y_homo) * Joule_to_eV, 3)]
+        lumo = [find_lumo(y_lumo), float(lumo_band), round(min(y_lumo) * Joule_to_eV, 3)]
+        print('\nHOMO/LUMO was extended')
         print(f'New homo: {homo}')
         print(f'New lumo: {lumo}')
 
@@ -188,9 +186,9 @@ def run(method, mol, mol_name, out_path, BZ_step, interactive_plot):
         x = [d * BZ_step_size * 2 * np.pi * 1E10 for d in x]
         y_homo = y_homo + y_homo[0:safety + 1]
         y_lumo = y_lumo + y_lumo[0:safety + 1]
-        homo = [find_homo(y_homo), float(idx_homo + 1), round(max(y_homo) * Joule_to_eV, 3)]
-        lumo = [find_lumo(y_lumo), float(idx_lumo + 1), round(min(y_lumo) * Joule_to_eV, 3)]
-        print('\nLUMO was extended')
+        homo = [find_homo(y_homo), float(homo_band), round(max(y_homo) * Joule_to_eV, 3)]
+        lumo = [find_lumo(y_lumo), float(lumo_band), round(min(y_lumo) * Joule_to_eV, 3)]
+        print('\nHOMO/LUMO was extended')
         print(f'New homo: {homo}')
         print(f'New lumo: {lumo}')
 
@@ -207,7 +205,7 @@ def run(method, mol, mol_name, out_path, BZ_step, interactive_plot):
     plt.plot(x, y_lumo, color='grey', zorder=0)
 
     print(f'HOMO fit region: {homo_idx - npoints}    {homo_idx + npoints}')
-    print(f'LUMO fit region: {homo_idx - npoints}    {homo_idx + npoints}')
+    print(f'LUMO fit region: {lumo_idx - npoints}    {lumo_idx + npoints}')
 
     plt.plot(x_fit_homo, y_fit_homo, 'o', label='fit region', markersize=2, color='black', zorder=10)
     plt.plot(x_fit_lumo, y_fit_lumo, 'o', markersize=2, color='black', zorder=10)
