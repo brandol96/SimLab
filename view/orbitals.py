@@ -3,7 +3,7 @@ import os
 import shutil
 def run_waveplot_parallelism(OMP_threads,MPI_cores,verbosity):
     if MPI_cores != 1:
-        dftb_mpi_bin = os.environ["DFTB_MPI"]
+        dftb_mpi_bin = os.environ["DFTB_MPI_BIN"]
         dftb_mpi_lib = os.environ["DFTB_MPI_LIB"]
         inline_env = f"LD_LIBRARY_PATH={dftb_mpi_lib}"
         if verbosity > 2:
@@ -16,7 +16,7 @@ def run_waveplot_parallelism(OMP_threads,MPI_cores,verbosity):
         os.environ["OMP_PLACES"] = 'cores'
         os.environ["OPENBLAS_NUM_THREADS"] = str(OMP_threads)
         os.environ["OMP_NUM_THREADS"] = str(OMP_threads)
-        dftb_omp_bin = os.environ["DFTB_OMP"]
+        dftb_omp_bin = os.environ["DFTB_OMP_BIN"]
         dftb_omp_lib = os.environ["DFTB_OMP_LIB"]
         if verbosity > 2:
             os.system(f'{inline_env} {dftb_mpi_bin}waveplot | tee waveplot.out')
