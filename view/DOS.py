@@ -4,7 +4,7 @@ from SimLab.utils import read_dos_dftb
 from SimLab.utils import read_fermi_levels_dftb
 
 
-def run_dftb(mol, mol_name, out_path, interactive_plot, dos_range):
+def run_dftb(mol, mol_name, out_path, interactive_plot, dos_range, plot_PDOS = False):
     os.system(f'dp_dos {out_path}band.out {out_path}{mol_name}.dos.dat')
 
     ene, dos, eigen, eigen_occs = read_dos_dftb(out_path, mol_name, True)
@@ -17,6 +17,9 @@ def run_dftb(mol, mol_name, out_path, interactive_plot, dos_range):
     # set DOS center to zero
     ene = [Ene - fermi_e for Ene in ene]
     eigen = [Lam - fermi_e for Lam in eigen]
+
+    if plot_PDOS:
+        print(os.list(out_path))
 
     # remove from ene and eigen all values outside dos_range
     dos_range = [-dos_range, dos_range]

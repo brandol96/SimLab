@@ -171,6 +171,7 @@ def start_view(mol, mol_name, out_path, **kwargs):
     verbosity = kwargs.get('verbosity')
     BZ_path = kwargs.get('BZ_path')
     BZ_step = kwargs.get('BZ_step')
+    plot_PDOS = kwargs.get('plot_PDOS')
     if method == 'DFTB':
         if simulation == 'optimize':
             from SimLab.view import DOS
@@ -180,7 +181,7 @@ def start_view(mol, mol_name, out_path, **kwargs):
                 print('Some direction has pbc, set "simulation = bands" to view band structure and DOS')
             else:
                 print('No direction has pbc, simple DOS')
-                DOS.run_dftb(mol, mol_name, out_path, interactive_plot, dos_range)
+                DOS.run_dftb(mol, mol_name, out_path, interactive_plot, dos_range, plot_PDOS)
 
         if simulation == 'bands':
             from SimLab.view import bands
