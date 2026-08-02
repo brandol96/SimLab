@@ -68,8 +68,8 @@ def run_dftb(mol, mol_name, out_path, interactive_plot, dos_range, plot_PDOS = F
                 atom = data[0]
                 shell = data[1]
                 orbital = data[2]
-                dos_file = f'{out_path}{output}.dos.dat'
-                os.system(f'dp_dos {out_path}{output} {dos_file}')
+                dos_file = f'{output}.dos.dat'
+                os.system(f'dp_dos {out_path}{output} {out_path}{dos_file}')
                 ene, dos = read_dos_dftb(out_path, dos_file)
                 ene, dos = center_to_fermi(ene, dos, fermi_e, dos_range)
                 ax.plot(ene, dos, label=f'pdos: {atom} {shell_dict[shell]} {orbital}')
