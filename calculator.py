@@ -81,6 +81,7 @@ def fetch_dftb_calc(mol, cluster, **kwargs):
 
     eVA_to_HaBohr = 0.01944689673
 
+    print(mol.get_species())
     PDOS_string = f'{{\n Region = {{\n Atoms = C\n OrbitalResolved = Yes }} \n }}'
 
     if cluster:
