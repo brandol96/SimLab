@@ -114,10 +114,11 @@ def read_dos_dftb(path,dos_file, return_eigen=False):
 
     with open(f'{path}{dos_file}') as file:
         for line in file:
-            data = line.split()
-            ene.insert(i, float(data[0]))
-            dos.insert(i, float(data[1]))
-            i += 1
+            if 'KPT' not in line:
+                data = line.split()
+                ene.insert(i, float(data[0]))
+                dos.insert(i, float(data[1]))
+                i += 1
     with open(f'{path}band.out') as eigen:
         for line in eigen:
             data = line.split()
