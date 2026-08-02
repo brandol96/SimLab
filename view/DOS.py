@@ -8,6 +8,7 @@ def center_to_fermi(energy, dos, fermi_e, dos_range ,eigen = []):
     # set DOS center to zero
     ene = [Ene - fermi_e for Ene in energy]
     if eigen:
+        print('moving eigen')
         eigen = [Lam - fermi_e for Lam in eigen]
 
     # remove from ene and eigen all values outside dos_range
@@ -18,7 +19,12 @@ def center_to_fermi(energy, dos, fermi_e, dos_range ,eigen = []):
         if -dos_range <= E <= dos_range:
             aux_dos.append(D)
             aux_ene.append(E)
-    return aux_ene, aux_dos
+
+
+    if eigen:
+        return aux_ene, aux_dos, eigen
+    else:
+        return aux_ene, aux_dos
 
 
 def run_dftb(mol, mol_name, out_path, interactive_plot, dos_range, plot_PDOS = False):
@@ -32,7 +38,7 @@ def run_dftb(mol, mol_name, out_path, interactive_plot, dos_range, plot_PDOS = F
     fig, ax = plt.subplots(figsize=(20, 5))
     fig.suptitle(mol_name.replace("_", " ") + ' DOS', fontsize=20)
 
-    ene, dos = center_to_fermi(ene, dos, fermi_e, dos_range, eigen)
+    ene, dos, eigen = center_to_fermi(ene, dos, fermi_e, dos_range, eigen)
 
     # plot stuff
     ax.plot(ene, dos)
