@@ -72,6 +72,7 @@ def run_dftb(mol, mol_name, out_path, interactive_plot, dos_range, plot_PDOS = F
                 ax.plot(ene, dos, label=f'pdos: {atom} {shell_dict[shell]} {orbital}')
 
     plt.tight_layout()
+    ax.legend()
     fig.savefig(f'{out_path}DFTB_{mol_name}_DOS.png')
     if interactive_plot:
         plt.show()
