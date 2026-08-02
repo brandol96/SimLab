@@ -6,7 +6,7 @@ from SimLab.utils import read_fermi_levels_dftb
 
 def center_to_fermi(E,D,fermi_e, dos_range):
     # set DOS center to zero
-    ene = [Ene - fermi_e for Ene in ene]
+    ene = [Ene - fermi_e for Ene in E]
     eigen = [Lam - fermi_e for Lam in eigen]
 
     # remove from ene and eigen all values outside dos_range
