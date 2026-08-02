@@ -32,7 +32,7 @@ def run_dftb(mol, mol_name, out_path, interactive_plot, dos_range, plot_PDOS = F
     fig, ax = plt.subplots(figsize=(20, 5))
     fig.suptitle(mol_name.replace("_", " ") + ' DOS', fontsize=20)
 
-    ene, dos = center_to_fermi(E, D, fermi_e, dos_range)
+    ene, dos = center_to_fermi(ene, dos, fermi_e, dos_range)
 
     # plot stuff
     ax.plot(ene, dos)
