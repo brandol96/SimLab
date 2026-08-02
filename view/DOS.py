@@ -11,12 +11,11 @@ def center_to_fermi(energy, dos, fermi_e, dos_range ,eigen = []):
         eigen = [Lam - fermi_e for Lam in eigen]
 
     # remove from ene and eigen all values outside dos_range
-    dos_range_list = [-dos_range, dos_range]
     aux_dos = []
     aux_ene = []
 
     for E, D in zip(ene, dos):
-        if dos_range_list[0] <= E <= dos_range_list[1]:
+        if -dos_range <= E <= dos_range:
             aux_dos.append(D)
             aux_ene.append(E)
     return aux_ene, aux_dos
@@ -39,7 +38,7 @@ def run_dftb(mol, mol_name, out_path, interactive_plot, dos_range, plot_PDOS = F
     ax.plot(ene, dos)
     ax.plot([0,0],[min(dos),max(dos)],'--')
     for e in eigen:
-        if dos_range[0] <= e <= dos_range[1]:
+        if -dos_range <= e <= dos_range:
             ax.plot([e, e], [0, 0.1 * max(dos)], color='black')
 
     # text labels with relevant info
