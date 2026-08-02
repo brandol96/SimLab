@@ -53,10 +53,10 @@ def run_dftb(mol, mol_name, out_path, interactive_plot, dos_range, plot_PDOS = F
     ax.set_xlabel('Energy [eV]', fontsize=20)
     ax.set_yticks([])
 
-    shell_dict = {'0':'s',
-                  '1':'p',
-                  '2':'d',
-                  '3':'f',}
+    shell_dict = {'1':'s',
+                  '2':'p',
+                  '3':'d',
+                  '4':'f',}
 
     if plot_PDOS:
         out_files = os.listdir(out_path)
