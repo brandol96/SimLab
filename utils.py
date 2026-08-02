@@ -114,8 +114,8 @@ def read_dos_dftb(path,dos_file, return_eigen=False):
 
     with open(f'{path}{dos_file}') as file:
         for line in file:
-            if 'KPT' not in line:
-                data = line.split()
+            data = line.split()
+            if 'KPT' not in data and data != []:
                 ene.insert(i, float(data[0]))
                 dos.insert(i, float(data[1]))
                 i += 1
