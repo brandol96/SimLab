@@ -4,9 +4,9 @@ from SimLab.utils import read_dos_dftb
 from SimLab.utils import read_fermi_levels_dftb
 
 
-def center_to_fermi(E,D,fermi_e, dos_range ,eigen = []):
+def center_to_fermi(energy, dos, fermi_e, dos_range ,eigen = []):
     # set DOS center to zero
-    ene = [Ene - fermi_e for Ene in E]
+    ene = [Ene - fermi_e for Ene in energy]
     if eigen:
         eigen = [Lam - fermi_e for Lam in eigen]
 
