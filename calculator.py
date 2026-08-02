@@ -101,7 +101,7 @@ def fetch_dftb_calc(mol, cluster, **kwargs):
                         Hamiltonian_Dispersion='LennardJones{Parameters = UFFParameters{}}',
                         Analysis_='',
                         Analysis_WriteEigenvectors='Yes',
-                        Analysis_ProjectStates_=PDOS_string,
+                        Analysis_ProjectStates=PDOS_string,
                         Options_='',
                         Options_ReadChargesAsText='Yes',
                         Options_WriteDetailedXml='Yes',
