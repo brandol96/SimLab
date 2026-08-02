@@ -23,7 +23,7 @@ def run_dftb(mol, mol_name, out_path, interactive_plot, dos_range, plot_PDOS = F
         for output in out_files:
             if 'PDOS' in output:
                 data = output.split('_')
-                data = data.split('.')
+                data = data[1].split('.')
                 print(data)
 
     # remove from ene and eigen all values outside dos_range
