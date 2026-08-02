@@ -107,7 +107,6 @@ def silly_method_to_get_plane_distance(molecule):
 def read_dos_dftb(path,dos_file, return_eigen=False):
     ene = []
     dos = []
-    i = 0
     print('read DOS')
     eigen_list = []
     eigen_occs = []
@@ -115,10 +114,8 @@ def read_dos_dftb(path,dos_file, return_eigen=False):
     with open(f'{path}{dos_file}') as file:
         for line in file:
             data = line.split()
-            if 'KPT' not in data and data != []:
-                ene.insert(i, float(data[0]))
-                dos.insert(i, float(data[1]))
-                i += 1
+            ene.append(float(data[0]))
+            dos.append(float(data[1]))
     with open(f'{path}band.out') as eigen:
         for line in eigen:
             data = line.split()
