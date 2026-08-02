@@ -4,10 +4,11 @@ from SimLab.utils import read_dos_dftb
 from SimLab.utils import read_fermi_levels_dftb
 
 
-def center_to_fermi(E,D,fermi_e, dos_range):
+def center_to_fermi(E,D,fermi_e, dos_range ,eigen = []):
     # set DOS center to zero
     ene = [Ene - fermi_e for Ene in E]
-    eigen = [Lam - fermi_e for Lam in eigen]
+    if eigen:
+        eigen = [Lam - fermi_e for Lam in eigen]
 
     # remove from ene and eigen all values outside dos_range
     dos_range = [-dos_range, dos_range]
@@ -32,7 +33,7 @@ def run_dftb(mol, mol_name, out_path, interactive_plot, dos_range, plot_PDOS = F
     fig, ax = plt.subplots(figsize=(20, 5))
     fig.suptitle(mol_name.replace("_", " ") + ' DOS', fontsize=20)
 
-    ene, dos = center_to_fermi(ene, dos, fermi_e, dos_range)
+    ene, dos = center_to_fermi(ene, dos, fermi_e, dos_range, eigen)
 
     # plot stuff
     ax.plot(ene, dos)
