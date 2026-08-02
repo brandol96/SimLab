@@ -65,6 +65,8 @@ class Cody:
             temp_profile=kwargs.get('temp_profile', None),
 
             # band structure stuff
+            plot_DOS = kwargs.get('plot_DOS', False),
+            plot_PDOS = kwargs.get('plot_PDOS',False),
             BZ_path=kwargs.get('BZ_path', 'Please Supply a Path'),
             BZ_step=kwargs.get('BZ_step', 1E-2),
             bands_zoom=kwargs.get('bands_zoom', -1),

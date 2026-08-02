@@ -65,6 +65,7 @@ def fetch_dftb_calc(mol, cluster, **kwargs):
     max_driver_steps = kwargs.get('max_driver_steps')
     lattice_opt = boolean_to_string(kwargs.get('lattice_opt'))
     fix_angles = boolean_to_string(kwargs.get('fix_angles'))
+
     fix_lengths = kwargs.get('fix_lengths').copy()
     n_points = kwargs.get('n_points')
     max_atom_step = kwargs.get('max_atom_step')
@@ -101,7 +102,7 @@ def fetch_dftb_calc(mol, cluster, **kwargs):
                         Analysis_ProjectStates_='',
                         Analysis_ProjectStates_Region_='',
                         Analysis_ProjectStates_Region_Atoms='C',
-                        Analysis_ProjectStates_Region_OrbitalResolved='Yes',
+                        Analysis_ProjectStates_Region_OrbitalResolved='No',
                         Options_='',
                         Options_ReadChargesAsText='Yes',
                         Options_WriteDetailedXml='Yes',
