@@ -104,14 +104,15 @@ def silly_method_to_get_plane_distance(molecule):
         z2_list = [round(positions[-1][2],3)]
     return abs(statistics.mean(z1_list) - statistics.mean(z2_list))
 
-def read_dos_dftb(path, mol_name, return_eigen=False):
+def read_dos_dftb(dos_path, return_eigen=False):
     ene = []
     dos = []
     i = 0
     print('read DOS')
     eigen_list = []
     eigen_occs = []
-    with open(f'{path}{mol_name}.dos.dat') as file:
+
+    with open(f'{dos_path}') as file:
         for line in file:
             data = line.split()
             ene.insert(i, float(data[0]))
