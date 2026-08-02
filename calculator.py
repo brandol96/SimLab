@@ -81,6 +81,8 @@ def fetch_dftb_calc(mol, cluster, **kwargs):
 
     eVA_to_HaBohr = 0.01944689673
 
+    PDOS_string = f'Region = {{\n Atoms = C\n OrbitalResolved = Yes }}'
+
     if cluster:
         if use_LennardJones:
             calc = Dftb(label=label,
@@ -99,10 +101,7 @@ def fetch_dftb_calc(mol, cluster, **kwargs):
                         Hamiltonian_Dispersion='LennardJones{Parameters = UFFParameters{}}',
                         Analysis_='',
                         Analysis_WriteEigenvectors='Yes',
-                        Analysis_ProjectStates_='',
-                        Analysis_ProjectStates_Region_='',
-                        Analysis_ProjectStates_Region_Atoms='C',
-                        Analysis_ProjectStates_Region_OrbitalResolved='No',
+                        Analysis_ProjectStates_=PDOS_string,
                         Options_='',
                         Options_ReadChargesAsText='Yes',
                         Options_WriteDetailedXml='Yes',
