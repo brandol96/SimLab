@@ -104,7 +104,7 @@ def silly_method_to_get_plane_distance(molecule):
         z2_list = [round(positions[-1][2],3)]
     return abs(statistics.mean(z1_list) - statistics.mean(z2_list))
 
-def read_dos_dftb(dos_path, return_eigen=False):
+def read_dos_dftb(path,dos_file, return_eigen=False):
     ene = []
     dos = []
     i = 0

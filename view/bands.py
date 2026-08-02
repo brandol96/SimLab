@@ -17,8 +17,8 @@ def run_dftb(mol, mol_name, out_path, zoom, path, dK,
     #  ...
     #  [kptN E_band1 E_band2 ... E_bandM]]
 
-    dos_path = f'{out_path}{mol_name}.dos.dat'
-    ene, dos = read_dos_dftb(dos_path)
+    dos_file = f'{mol_name}.dos.dat'
+    ene, dos = read_dos_dftb(out_path,dos_file)
     # read_dos_dftb return two lists with the aligned plot data
     # ene = [Ene0, Ene1, Ene2, ..., Enen]
     # dos = [Dos0, Dos1m Dos2, ..., Dosn]

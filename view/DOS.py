@@ -24,8 +24,8 @@ def center_to_fermi(E,D,fermi_e, dos_range):
 def run_dftb(mol, mol_name, out_path, interactive_plot, dos_range, plot_PDOS = False):
     os.system(f'dp_dos {out_path}band.out {out_path}{mol_name}.dos.dat')
 
-    dos_path = f'{out_path}{mol_name}.dos.dat'
-    ene, dos, eigen, eigen_occs = read_dos_dftb(dos_path, True)
+    dos_file = f'{mol_name}.dos.dat'
+    ene, dos, eigen, eigen_occs = read_dos_dftb(out_path,dos_file, True)
     homo, lumo, gap, fermi_e = read_fermi_levels_dftb(out_path, mol_name)
 
     # setup figure
@@ -61,8 +61,7 @@ def run_dftb(mol, mol_name, out_path, interactive_plot, dos_range, plot_PDOS = F
                 atom = data[0]
                 shell = data[1]
                 orbital = data[2]
-                dos_path = f'{out_path}{output}'
-                ene, dos = read_dos_dftb(dos_path)
+                ene, dos = read_dos_dftb(out_path, output)
                 ene, dos = center_to_fermi(E, D, fermi_e, dos_range)
                 ax.plot(ene, dos, label=f'pdos: {atom} {shell_dict[shell]} {orbital}')
 
