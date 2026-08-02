@@ -84,7 +84,7 @@ def fetch_dftb_calc(mol, cluster, **kwargs):
     chemSymbs = list(set(mol.get_chemical_symbols()))
     PDOS_string = f'{{\n'
     for chemSymb in chemSymbs:
-        PDOS_string += f'Region = {{\n Atoms = {chemSymb}\n OrbitalResolved = Yes\n Label = {chemSymb} }} \n'
+        PDOS_string += f'Region = {{\n Atoms = {chemSymb}\n OrbitalResolved = Yes\n Label = PDOS_{chemSymb} }} \n'
     PDOS_string += '}'
 
     if cluster:
