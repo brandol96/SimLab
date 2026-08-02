@@ -60,6 +60,7 @@ def run_dftb(mol, mol_name, out_path, interactive_plot, dos_range, plot_PDOS = F
 
     if plot_PDOS:
         out_files = os.listdir(out_path)
+        out_files.sort()
         for output in out_files:
             if 'PDOS' in output and '.dos.dat' not in output:
                 print(output)
