@@ -19,7 +19,7 @@ def run_dftb(mol, mol_name, out_path, interactive_plot, dos_range, plot_PDOS = F
     eigen = [Lam - fermi_e for Lam in eigen]
 
     if plot_PDOS:
-        print(os.list(out_path))
+        print(os.listdir(out_path))
 
     # remove from ene and eigen all values outside dos_range
     dos_range = [-dos_range, dos_range]
