@@ -82,7 +82,7 @@ def fetch_dftb_calc(mol, cluster, **kwargs):
     eVA_to_HaBohr = 0.01944689673
 
     chemSymbs = mol.get_chemical_symbols()
-    PDOS_string += f'{{\n
+    PDOS_string += f'{{\n'
     for chemSymb in chemSymbs:
         PDOS_string += f'Region = {{\n Atoms = {chemSymb}\n OrbitalResolved = Yes }} \n'
     PDOS_string += '}}'
