@@ -101,7 +101,7 @@ def fetch_dftb_calc(mol, cluster, **kwargs):
                         Analysis_ProjectStates_='',
                         Analysis_ProjectStates_Region_='',
                         Analysis_ProjectStates_Region_Atoms='C',
-                        Analysis_ProjectStates_Region_ShellResolved='Yes',
+                        Analysis_ProjectStates_Region_OrbitalResolved='Yes',
                         Options_='',
                         Options_ReadChargesAsText='Yes',
                         Options_WriteDetailedXml='Yes',
