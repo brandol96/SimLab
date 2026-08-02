@@ -11,12 +11,12 @@ def center_to_fermi(energy, dos, fermi_e, dos_range ,eigen = []):
         eigen = [Lam - fermi_e for Lam in eigen]
 
     # remove from ene and eigen all values outside dos_range
-    dos_range = [-dos_range, dos_range]
+    dos_range_list = [-dos_range, dos_range]
     aux_dos = []
     aux_ene = []
 
     for E, D in zip(ene, dos):
-        if dos_range[0] <= E <= dos_range[1]:
+        if dos_range_list[0] <= E <= dos_range_list[1]:
             aux_dos.append(D)
             aux_ene.append(E)
     return aux_ene, aux_dos
