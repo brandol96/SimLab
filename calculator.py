@@ -85,7 +85,7 @@ def fetch_dftb_calc(mol, cluster, **kwargs):
     PDOS_string = f'{{\n'
     for chemSymb in chemSymbs:
         PDOS_string += f'Region = {{\n Atoms = {chemSymb}\n OrbitalResolved = Yes }} \n'
-    PDOS_string += '}}'
+    PDOS_string += '}'
 
     if cluster:
         if use_LennardJones:
