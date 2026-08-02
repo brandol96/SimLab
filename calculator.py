@@ -81,8 +81,11 @@ def fetch_dftb_calc(mol, cluster, **kwargs):
 
     eVA_to_HaBohr = 0.01944689673
 
-    print(mol.get_species())
-    PDOS_string = f'{{\n Region = {{\n Atoms = C\n OrbitalResolved = Yes }} \n }}'
+    chemSymbs = mol.get_chemical_symbols()
+    PDOS_string += f'{{\n
+    for chemSymb in chemSymbs:
+        PDOS_string += f'Region = {{\n Atoms = {chemSymb}\n OrbitalResolved = Yes }} \n'
+    PDOS_string += '}}'
 
     if cluster:
         if use_LennardJones:
