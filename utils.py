@@ -112,7 +112,7 @@ def read_dos_dftb(path,dos_file, return_eigen=False):
     eigen_list = []
     eigen_occs = []
 
-    with open(f'{dos_path}') as file:
+    with open(f'{path}{dos_file}') as file:
         for line in file:
             data = line.split()
             ene.insert(i, float(data[0]))
