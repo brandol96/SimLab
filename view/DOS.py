@@ -62,6 +62,7 @@ def run_dftb(mol, mol_name, out_path, interactive_plot, dos_range, plot_PDOS = F
         out_files = os.listdir(out_path)
         for output in out_files:
             if 'PDOS' in output:
+                print(output)
                 data = output.split('_')
                 data = data[1].split('.')
                 atom = data[0]
