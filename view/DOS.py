@@ -2,7 +2,6 @@ import os
 import matplotlib.pyplot as plt
 from SimLab.utils import read_dos_dftb
 from SimLab.utils import read_fermi_levels_dftb
-from httplib2 import re_unsafe
 
 
 def center_to_fermi(E,D,fermi_e, dos_range):
