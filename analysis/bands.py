@@ -12,8 +12,8 @@ def run(OMP_threads, MPI_cores, verbosity,
                  Hamiltonian_SCCTolerance='100',
                  #Analysis_='',
                  #Analysis_WriteEigenVectors="Yes",
-                 #Options_='',
-                 #Options_WriteDetailedXml='Yes'
+                 Options_='',
+                 Options_WriteDetailedXml='Yes'
                  )
     # run optimization through DFTB+ implemented routines
     bands = set_parallelism(bands, OMP_threads, MPI_cores, verbosity)
