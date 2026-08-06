@@ -10,8 +10,8 @@ def run(OMP_threads, MPI_cores, verbosity,
                  Hamiltonian_ReadInitialCharges='Yes',
                  Hamiltonian_MaxSCCIterations='1',
                  Hamiltonian_SCCTolerance='100',
-                 #Analysis_='',
-                 #Analysis_WriteEigenVectors="Yes",
+                 Analysis_='',
+                 Analysis_WriteEigenVectors="Yes",
                  Options_='',
                  Options_WriteDetailedXml='Yes'
                  )
