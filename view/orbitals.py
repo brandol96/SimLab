@@ -18,6 +18,7 @@ def run_waveplot_parallelism(OMP_threads,MPI_cores,verbosity):
         os.environ["OMP_NUM_THREADS"] = str(OMP_threads)
         dftb_omp_bin = os.environ["DFTB_OMP_BIN"]
         dftb_omp_lib = os.environ["DFTB_OMP_LIB"]
+        inline_env = f"LD_LIBRARY_PATH={dftb_omp_lib}"
         if verbosity > 2:
             os.system(f'{inline_env} {dftb_mpi_bin}waveplot | tee waveplot.out')
         else:
