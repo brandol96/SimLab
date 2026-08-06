@@ -88,7 +88,7 @@ def run(Homo, Lumo, opt_path, orb_path, homo_max_kpt, lumo_min_kpt,
         write_waveplot(f'{orb_path}lumo+{i}{os.sep}', l, lumo_min_kpt, WP_grid, WP_Box_View, periodic,SKfiles)
 
         os.chdir(f'{orb_path}lumo+{i}')
-        os.system('waveplot > waveplot.out')
+        run_waveplot_parallelism(OMP_threads,MPI_cores,verbosity)
         os.chdir(current_path)
         i += 1
     print('')
