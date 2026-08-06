@@ -259,8 +259,12 @@ def start_view(mol, mol_name, out_path, **kwargs):
             print(f'Run: {method} calculation for {mol_name}')
 
             # get required variables
-            opt_out_path = f'optimize_{method}_{mol_name}' + os.sep
-            #opt_out_path = f'bands_{method}_{mol_name}{os.sep}'
+            pbc = mol.get_pbc()
+            if True in pbc:
+                opt_out_path = f'bands_{method}_{mol_name}{os.sep}'
+            else:
+                opt_out_path = f'optimize_{method}_{mol_name}' + os.sep
+
             target_orbirals = kwargs.get('target_orbirals')
             KPTs = 1
             WP_grid = kwargs.get('WP_grid')
