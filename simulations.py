@@ -261,7 +261,8 @@ def start_view(mol, mol_name, out_path, **kwargs):
             # get required variables
             pbc = mol.get_pbc()
             if True in pbc:
-                opt_out_path = f'bands_{method}_{mol_name}{os.sep}'
+                #opt_out_path = f'bands_{method}_{mol_name}{os.sep}'
+                opt_out_path = f'optimize_{method}_{mol_name}' + os.sep
             else:
                 opt_out_path = f'optimize_{method}_{mol_name}' + os.sep
 
