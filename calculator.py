@@ -1,4 +1,7 @@
 # calculator definitions
+from pydoc import replace
+
+
 def set_parallelism(calc,OMP_threads,MPI_cores,verbosity):
     import os
     if MPI_cores != 1:
@@ -57,15 +60,36 @@ def get_grid_origin(mol, n_points):
               (max(Z) - min(Z)) * A_to_Hr / n_points]
     return grid_O, grid_S
 
+def fetch_spin_constants(spin_file_path):
+    import os
+    spin_constants_dict = dict()
+    spin_constants_list = []
+    dict_key = False
+    with open(f'{spin_file_path}{os.sep}spinw.txt','r') as spin_file:
+        for line in spin_file:
+            line = line.strip()
+            if line:
+                if ':' in line:
+                    if dict_key:
+                        spin_constants_dict[dict_key] = spin_constants_list
+                        spin_constants_list = []
+                    dict_key = line.replace(':','')
+                else:
+                    spin_constants_list.append(line.split('    '))
+    spin_constants_dict[dict_key] = spin_constants_list
+    return(spin_constants_dict)
+
+
 def fetch_dftb_calc(mol, cluster, **kwargs):
     from ase.calculators.dftb import Dftb
     label = kwargs.get('label')
     kpts = kwargs.get('kpts')
+    SKFiles = kwargs.get('SKFiles')
     max_force = kwargs.get('max_force')
     max_driver_steps = kwargs.get('max_driver_steps')
     lattice_opt = boolean_to_string(kwargs.get('lattice_opt'))
     fix_angles = boolean_to_string(kwargs.get('fix_angles'))
-
+    spin_polarisation = kwargs.get('spin_polarisation')
     fix_lengths = kwargs.get('fix_lengths').copy()
     n_points = kwargs.get('n_points')
     max_atom_step = kwargs.get('max_atom_step')
@@ -86,6 +110,55 @@ def fetch_dftb_calc(mol, cluster, **kwargs):
     for chemSymb in chemSymbs:
         PDOS_string += f'Region = {{\n Atoms = {chemSymb}\n OrbitalResolved = Yes\n Label = PDOS_{chemSymb} }} \n'
     PDOS_string += '}'
+
+
+
+    calc_dict = dict(label=label,
+                     Driver_="GeometryOptimisation",
+                     Driver_GeometryOptimisation="Lbfgs{ Memory = 20 }",
+                     Driver_MaxSteps=max_driver_steps,
+                     Driver_Convergence=f"{{ GradMax = {max_force * eVA_to_HaBohr} }}",
+                     Driver_MaxAtomStep=max_atom_step,
+                     Driver_MovedAtoms='1:-1',
+                     Driver_AppendGeometries='Yes',
+                     Hamiltonian_SCC=SCC,
+                     Hamiltonian_SCCTolerance=max_SCC,
+                     Hamiltonian_MaxSCCIterations=max_SCC_steps,
+                     Hamiltonian_ReadInitialCharges='Yes',
+                     Hamiltonian_Filling=f"Fermi{{Temperature [K] = {fermi_filling} }}",
+                     Analysis_='',
+                     Analysis_WriteEigenvectors='No',
+                     Options_WriteChargesAsText='No',
+                     Options_WriteDetailedXml='No',
+                     ParserOptions_="",
+                     ParserOptions_ParserVersion=11,
+                     )
+
+    if not cluster:
+        calc_dict['kpts'] = kpts
+
+    if use_LennardJones:
+        calc_dict['Hamiltonian_Dispersion']='LennardJones{Parameters = UFFParameters{}}'
+
+    if spin_polarisation:
+        spin_constants = fetch_spin_constants(SKFiles)
+        print('Spin constants enabled!')
+        spin_constants_string = '{\n      ShellResolvedSpin = Yes\n'
+        for chemSymb in chemSymbs:
+            spin_constants_string += f'      {chemSymb} {{'
+            for orbital in spin_constants[chemSymb]:
+                spin_constants_string += f'{' '.join(orbital)} '
+            spin_constants_string += '}\n'
+        spin_constants_string += '    }'
+
+        calc_dict['Hamiltonian_SpinConstants'] = spin_constants_string
+        calc_dict['Hamiltonian_ShellResolvedSCC'] = 'No'
+        calc_dict['Hamiltonian_SpinPolarisation']='Colinear{}'
+
+
+    calc = Dftb (**calc_dict)
+
+    return calc
 
     if cluster:
         if use_LennardJones:

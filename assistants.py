@@ -53,6 +53,7 @@ class Cody:
             SCC=kwargs.get('SCC', True),
             max_SCC=kwargs.get('max_SCC', 1E-2),
             max_SCC_steps=kwargs.get('max_SCC_steps', 1000),
+            spin_polarisation=kwargs.get('spin_polarisation', False),
             fermi_filling=kwargs.get('fermi_filling', 0.0),
             use_LennardJones=kwargs.get('use_LennardJones', False),
             SKFiles=kwargs.get('SKFiles', 'Please supply a choice!'),
