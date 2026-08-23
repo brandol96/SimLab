@@ -114,7 +114,8 @@ def fetch_dftb_calc(mol, cluster, **kwargs):
         PDOS_string += f'Region = {{\n Atoms = {chemSymb}\n OrbitalResolved = Yes\n Label = PDOS_{chemSymb} }} \n'
     PDOS_string += '}'
 
-
+    # I have to think better about the usage of charges in '.dat' or '.bin'
+    # There are cases where each is important
 
     calc_dict = dict(label=label,
                      Driver_="GeometryOptimisation",
@@ -130,9 +131,9 @@ def fetch_dftb_calc(mol, cluster, **kwargs):
                      Hamiltonian_ReadInitialCharges='No',
                      Hamiltonian_Filling=f"Fermi{{Temperature [K] = {fermi_filling} }}",
                      Analysis_='',
-                     Analysis_WriteEigenvectors='No',
-                     Options_WriteChargesAsText='Yes',
-                     Options_WriteDetailedXml='No',
+                     Analysis_WriteEigenvectors=write_eigens_bin,
+                     Options_WriteChargesAsText='No',
+                     Options_WriteDetailedXml=write_detail_xml,
                      ParserOptions_="",
                      ParserOptions_ParserVersion=11,
                      )
