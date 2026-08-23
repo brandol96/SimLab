@@ -60,6 +60,8 @@ class Cody:
             target_orbirals=kwargs.get('target_orbirals', 0),
             WP_grid=kwargs.get('WP_grid', 10),
             WP_Box_View=kwargs.get('WP_Box_View', [1,1,1]),
+            write_eigens_bin=kwargs.get('write_eigens_bin',False),
+            write_detail_xml=kwargs.get('write_detail_xml', False),
 
             # MD stuff
             thermostat=kwargs.get('thermostat', 'NVE'),

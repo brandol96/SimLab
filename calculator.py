@@ -101,7 +101,10 @@ def fetch_dftb_calc(mol, cluster, **kwargs):
     max_SCC_steps = kwargs.get('max_SCC_steps')
     fermi_filling = kwargs.get('fermi_filling')
     use_LennardJones = kwargs.get('use_LennardJones')
-    grid_O, grid_S = get_grid_origin(mol, n_points)
+    write_eigens_bin = boolean_to_string(kwargs.get('write_eigens_bin'))
+    write_detail_xml = boolean_to_string(kwargs.get('write_detail_xml'))
+
+    #grid_O, grid_S = get_grid_origin(mol, n_points)
 
     eVA_to_HaBohr = 0.01944689673
 
@@ -124,11 +127,11 @@ def fetch_dftb_calc(mol, cluster, **kwargs):
                      Hamiltonian_SCC=SCC,
                      Hamiltonian_SCCTolerance=max_SCC,
                      Hamiltonian_MaxSCCIterations=max_SCC_steps,
-                     Hamiltonian_ReadInitialCharges='Yes',
+                     Hamiltonian_ReadInitialCharges='No',
                      Hamiltonian_Filling=f"Fermi{{Temperature [K] = {fermi_filling} }}",
                      Analysis_='',
                      Analysis_WriteEigenvectors='No',
-                     Options_WriteChargesAsText='No',
+                     Options_WriteChargesAsText='Yes',
                      Options_WriteDetailedXml='No',
                      ParserOptions_="",
                      ParserOptions_ParserVersion=11,
