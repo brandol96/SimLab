@@ -150,7 +150,7 @@ def read_fermi_levels_dftb(path, mol_name, verbosity=2):
     # this is problematic because I'd like to make Cody FLEXIBLE to run the same procedure for
     # various molecules, one possible avenue to solve this is do some rounding when searching for
     # occupation, certainly a 0.00001 occupation is irrelevant to many applications!
-    print('read Fermi Level')
+    if verbosity >=2: print('read Fermi Level')
     lumo = [0, 0, 1000]
     homo = [0, 0, -1000]
     lumo_cur = [0, 0, 0]
