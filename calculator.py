@@ -132,6 +132,7 @@ def fetch_dftb_calc(mol, cluster, **kwargs):
                      Hamiltonian_Filling=f"Fermi{{Temperature [K] = {fermi_filling} }}",
                      Analysis_='',
                      Analysis_WriteEigenvectors=write_eigens_bin,
+                     Analysis_ProjectStates = PDOS_string,
                      Options_WriteChargesAsText='No',
                      Options_WriteDetailedXml=write_detail_xml,
                      ParserOptions_="",
