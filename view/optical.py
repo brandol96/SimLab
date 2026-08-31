@@ -3,7 +3,8 @@ from SimLab.read import optical
 import matplotlib.pyplot as plt
 import numpy as np
 
-def run_kick(method, out_path, mol_name, interactive_plot, directions, fourier_damp, field_strength, spec_range):
+def run_kick(method, out_path, mol_name, interactive_plot, spin_polarisation,
+             directions, fourier_damp, field_strength, spec_range):
     # a few parameters
     zoom = 6
     title_font = 20
@@ -27,6 +28,8 @@ def run_kick(method, out_path, mol_name, interactive_plot, directions, fourier_d
             total = (mu[:, 1] - mu[0, 1])
         else:
             total += (mu[:, 1] - mu[0, 1])
+        if spin_polarisation:
+            total += (mu[:, 4] - mu[0, 4])
         if time.size == 0:
             time = mu[:, 0]
         if mu_matrix_is_empty:
@@ -43,6 +46,8 @@ def run_kick(method, out_path, mol_name, interactive_plot, directions, fourier_d
             total = (mu[:, 2] - mu[0, 2])
         else:
             total += (mu[:, 2] - mu[0, 2])
+        if spin_polarisation:
+            total += (mu[:, 5] - mu[0, 5])
         if time.size == 0:
             time = mu[:, 0]
         if mu_matrix_is_empty:
@@ -59,6 +64,8 @@ def run_kick(method, out_path, mol_name, interactive_plot, directions, fourier_d
             total = (mu[:, 3] - mu[0, 3])
         else:
             total += (mu[:, 3] - mu[0, 3])
+        if spin_polarisation:
+            total += (mu[:, 6] - mu[0, 6])
         if time.size == 0:
             time = mu[:, 0]
         if mu_matrix_is_empty:

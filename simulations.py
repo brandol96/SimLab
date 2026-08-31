@@ -237,8 +237,8 @@ def start_view(mol, mol_name, out_path, **kwargs):
                 if sim_type == 'kick':
                     # the output info from kick optical simulation is the full spectra
                     # as well as the location of possible absorption peaks
-                    optical.run_kick(method, out_path, mol_name,
-                                     interactive_plot, directions, fourier_damp, field_strength, spec_range)
+                    optical.run_kick(method, out_path, mol_name,interactive_plot, spin_polarisation,
+                                     directions, fourier_damp, field_strength, spec_range)
                 elif sim_type == 'laser':
                     # the output info from laser optical simulation is the polarization response
                     # of the material to the laser excitation and

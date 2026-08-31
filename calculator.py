@@ -158,7 +158,7 @@ def fetch_dftb_calc(mol, cluster, **kwargs):
 
         calc_dict['Hamiltonian_SpinConstants'] = spin_constants_string
         calc_dict['Hamiltonian_ShellResolvedSCC'] = 'No'
-        calc_dict['Hamiltonian_SpinPolarisation']='Colinear{}'
+        calc_dict['Hamiltonian_SpinPolarisation']='Colinear{RelaxTotalSpin=Yes}'
 
 
     calc = Dftb (**calc_dict)

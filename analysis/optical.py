@@ -120,30 +120,47 @@ def run_casida(mol, OMP_threads, MPI_cores, max_SCC, max_SCC_steps,
                verbosity):
     from ase.calculators.dftb import Dftb
     from SimLab.calculator import set_parallelism
+    from SimLab.calculator import fetch_spin_constants
 
-    optical = Dftb(atoms=mol,
+    optical_dict = dict(atoms=mol,
                    label=f'optical_casida',
                    Hamiltonian_SCC='Yes',
                    Hamiltonian_SCCTolerance=max_SCC,
                    Hamiltonian_ReadInitialCharges='Yes',
                    Hamiltonian_MaxSCCIterations=max_SCC_steps,
                    Hamiltonian_Filling=f"Fermi{{Temperature [K] = {fermi_filling} }}",
-                   Hamiltonian_Mixer_='Anderson',
-                   Hamiltonian_Mixer_MixingParameter=5.000000000000000E-002,
-                   Hamiltonian_Mixer_Generations=8,
                    ExcitedState_='',
                    ExcitedState_Casida_='',
                    ExcitedState_Casida_NrOfExcitations=n_excitations,
                    ExcitedState_Casida_EnergyWindow=cutoff_energy,
                    ExcitedState_Casida_OscillatorWindow=cutoff_oscillator,
-                   ExcitedState_Casida_Symmetry='singlet',
                    ExcitedState_Casida_Diagonaliser='Arpack{}',
                    Options_='',
                    Options_WriteChargesAsText='Yes',
                    ParserOptions_='',
                    ParserOptions_IgnoreUnprocessedNodes='Yes',
                    ParserOptions_ParserVersion='14')
-    # run calculation through DFTB+ implemented routParserVersionines
+
+    if spin_polarisation:
+        chemSymbs = list(set(mol.get_chemical_symbols()))
+        spin_constants = fetch_spin_constants(SKFiles)
+        print('Spin constants enabled!')
+        spin_constants_string = '{\n      ShellResolvedSpin = Yes\n'
+        for chemSymb in chemSymbs:
+            spin_constants_string += f'      {chemSymb} {{'
+            for orbital in spin_constants[chemSymb]:
+                spin_constants_string += f'{' '.join(orbital)} '
+            spin_constants_string += '}\n'
+        spin_constants_string += '    }'
+
+        optical_dict['Hamiltonian_SpinConstants'] = spin_constants_string
+        optical_dict['Hamiltonian_SpinPolarisation'] = 'Colinear{}'
+        optical_dict['ExcitedState_Casida_Symmetry'] = 'Both'
+    else:
+        optical_dict['ExcitedState_Casida_Symmetry'] = 'singlet'
+
+    # run calculation through DFTB+ implemented routines
+    optical = Dftb(**optical_dict)
     optical = set_parallelism(optical, OMP_threads, MPI_cores, verbosity)
     optical.calculate(mol)
 
