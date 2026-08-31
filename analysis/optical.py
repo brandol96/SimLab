@@ -15,7 +15,7 @@ def get_grid_origin(mol, n_points):
     return grid_O, grid_S
 
 
-def run_kick(mol, OMP_threads, MPI_cores,
+def run_kick(mol, OMP_threads, MPI_cores, SKFiles,
              max_SCC, max_SCC_steps, fermi_filling, spin_polarisation,
              total_time, time_step, field_strength, n_points, direction, verbosity):
     from ase.calculators.dftb import Dftb
