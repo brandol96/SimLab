@@ -20,6 +20,7 @@ def run_kick(mol, OMP_threads, MPI_cores,
              total_time, time_step, field_strength, n_points, direction, verbosity):
     from ase.calculators.dftb import Dftb
     from SimLab.calculator import set_parallelism
+    from SimLab.calculator import fetch_spin_constants
 
     # writing DFTB electron dynamics manually
     totalSteps = int(total_time / time_step)
