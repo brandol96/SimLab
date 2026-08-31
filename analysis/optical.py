@@ -59,6 +59,7 @@ def run_kick(mol, OMP_threads, MPI_cores, SKFiles,
                    )
 
     if spin_polarisation:
+        chemSymbs = list(set(mol.get_chemical_symbols()))
         spin_constants = fetch_spin_constants(SKFiles)
         print('Spin constants enabled!')
         spin_constants_string = '{\n      ShellResolvedSpin = Yes\n'
