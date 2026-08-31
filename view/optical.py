@@ -313,11 +313,11 @@ def run_casida_pure(method, out_path, mol_name,
             X_peaks.append(X[n])
             Y_peaks.append(Y[n])
     i = 0
-    for ene, abs in zip(X_peaks, Y_peaks):
+    for ene, spec in zip(X_peaks, Y_peaks):
         if ene < energy_upper_plot:
             i+=1
-            ax.plot([ene, ene], [0, abs], color='red', label=f'({i}) Transition Energy = {ene:.3f}\n\n')
-            plt.text(ene - 0.05, abs+500, f'({i})')
+            ax.plot([ene, ene], [0, spec], color='red', label=f'({i}) Transition Energy = {ene:.3f}\n\n')
+            plt.text(ene - 0.05, spec+500, f'({i})')
 
     # with peaks in hand, let's find the transitions of these peaks
     # call this function to create filtered.DAT of casida spec
