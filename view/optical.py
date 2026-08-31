@@ -277,7 +277,7 @@ def run_casida_pure(method, out_path, mol_name,
             ener.append(float(line_split[0]))
             osc.append(float(line_split[1]))
         else:
-            if absolute(float(line_split[7])) < spin_cont:
+            if abs(float(line_split[7])) < spin_cont:
                 ener.append(float(line_split[0]))
                 osc.append(float(line_split[1]))
 
