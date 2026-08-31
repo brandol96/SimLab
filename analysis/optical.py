@@ -33,30 +33,20 @@ def run_kick(mol, OMP_threads, MPI_cores, SKFiles,
     electron_dynamics += f'\nWriteEnergyAndCharges = Yes}}'
 
     grid_O, grid_S = get_grid_origin(mol, n_points)
-    optical = Dftb(atoms=mol,
-                   label=f'optical_kick_{direction}',
-                   Hamiltonian_SCC='Yes',
-                   Hamiltonian_SCCTolerance=max_SCC,
-                   Hamiltonian_ReadInitialCharges='Yes',
-                   Hamiltonian_MaxSCCIterations=max_SCC_steps,
-                   Hamiltonian_Filling=f"Fermi{{Temperature [K] = {fermi_filling} }}",
-                   ElectronDynamics=electron_dynamics,
-#                   Analysis_='',
-#                   Analysis_ElectrostaticPotential_='',
-#                   Analysis_ElectrostaticPotential_OutputFile=f'potential_kick_{direction}.out',
-#                   Analysis_ElectrostaticPotential_AppendFile='Yes',
-#                   Analysis_ElectrostaticPotential_Softening='0.1',
-#                   Analysis_ElectrostaticPotential_Grid_='',
-#                   Analysis_ElectrostaticPotential_Grid_Spacing=f'{grid_S[0]} {grid_S[1]} {grid_S[1]}',
-#                   Analysis_ElectrostaticPotential_Grid_Origin=f'{grid_O[0]} {grid_O[1]} {grid_O[2]}',
-#                   Analysis_ElectrostaticPotential_Grid_GridPoints=f'{n_points} {n_points} 1',
-#                   Analysis_ElectrostaticPotential_Grid_Directions='1 0 0 0 1 0 0 0 1',
-                   Options_='',
-                   Options_WriteChargesAsText='Yes',
-                   ParserOptions_='',
-                   ParserOptions_IgnoreUnprocessedNodes='Yes',
-                   ParserOptions_ParserVersion='14'
-                   )
+    optical_dict = dict(atoms=mol,
+                        label=f'optical_kick_{direction}',
+                        Hamiltonian_SCC='Yes',
+                        Hamiltonian_SCCTolerance=max_SCC,
+                        Hamiltonian_ReadInitialCharges='Yes',
+                        Hamiltonian_MaxSCCIterations=max_SCC_steps,
+                        Hamiltonian_Filling=f"Fermi{{Temperature [K] = {fermi_filling} }}",
+                        ElectronDynamics=electron_dynamics,
+                        Options_='',
+                        Options_WriteChargesAsText='Yes',
+                        ParserOptions_='',
+                        ParserOptions_IgnoreUnprocessedNodes='Yes',
+                        ParserOptions_ParserVersion='14'
+                        )
 
     if spin_polarisation:
         chemSymbs = list(set(mol.get_chemical_symbols()))
@@ -70,11 +60,12 @@ def run_kick(mol, OMP_threads, MPI_cores, SKFiles,
             spin_constants_string += '}\n'
         spin_constants_string += '    }'
 
-        calc_dict['Hamiltonian_SpinConstants'] = spin_constants_string
-        calc_dict['Hamiltonian_ShellResolvedSCC'] = 'No'
-        calc_dict['Hamiltonian_SpinPolarisation']='Colinear{}'
+        optical_dict['Hamiltonian_SpinConstants'] = spin_constants_string
+        optical_dict['Hamiltonian_ShellResolvedSCC'] = 'No'
+        optical_dict['Hamiltonian_SpinPolarisation']='Colinear{}'
 
     # run calculation through DFTB+ implemented routines
+    optical = Dftb(**optical_dict)
     optical = set_parallelism(optical, OMP_threads, MPI_cores, verbosity)
     optical.calculate(mol)
 
