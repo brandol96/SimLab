@@ -130,6 +130,7 @@ def start_sim(mol, mol_name, out_path, **kwargs):
             n_excitations = kwargs.get('n_excitations')
             cutoff_energy = kwargs.get('cutoff_energy')
             cutoff_oscillator = kwargs.get('cutoff_osc')
+            spin_polarisation = kwargs.get('spin_polarisation')
 
             print(f'Run: {method} {sim_type} optical absorption for {mol_name}')
             pbc = mol.get_pbc()
@@ -144,7 +145,8 @@ def start_sim(mol, mol_name, out_path, **kwargs):
                     # the desired directions 'XYZ', 'XY', 'ZY', etc...
                     for direction in directions:
                         print(f'current direction: {direction}')
-                        optical.run_kick(mol, OMP_threads, MPI_cores, max_SCC, max_SCC_steps, fermi_filling,
+                        optical.run_kick(mol, OMP_threads, MPI_cores,
+                                         max_SCC, max_SCC_steps, fermi_filling, spin_polarisation,
                                          total_time, time_step, field_strength, n_points, direction, verbosity)
                 elif sim_type == 'laser':
                     print(f'current direction: {directions}')
@@ -222,6 +224,7 @@ def start_view(mol, mol_name, out_path, **kwargs):
             cutoff_weight = kwargs.get('cutoff_weight')
             energy_upper_plot = kwargs.get('energy_upper_plot')
             spec_range = kwargs.get('spec_range')
+            spin_polarisation = kwargs.get('spin_polarisation')
             print(f'{method} {sim_type} optical absorption for {mol_name}')
 
             pbc = mol.get_pbc()

@@ -136,7 +136,7 @@ def fetch_dftb_calc(mol, cluster, **kwargs):
                      Options_WriteChargesAsText='No',
                      Options_WriteDetailedXml=write_detail_xml,
                      ParserOptions_="",
-                     ParserOptions_ParserVersion=11,
+                     ParserOptions_ParserVersion='14',
                      )
 
     if not cluster:

@@ -15,7 +15,8 @@ def get_grid_origin(mol, n_points):
     return grid_O, grid_S
 
 
-def run_kick(mol, OMP_threads, MPI_cores, max_SCC, max_SCC_steps, fermi_filling,
+def run_kick(mol, OMP_threads, MPI_cores,
+             max_SCC, max_SCC_steps, fermi_filling, spin_polarisation,
              total_time, time_step, field_strength, n_points, direction, verbosity):
     from ase.calculators.dftb import Dftb
     from SimLab.calculator import set_parallelism
@@ -55,6 +56,21 @@ def run_kick(mol, OMP_threads, MPI_cores, max_SCC, max_SCC_steps, fermi_filling,
                    ParserOptions_IgnoreUnprocessedNodes='Yes',
                    ParserOptions_ParserVersion='14'
                    )
+
+    if spin_polarisation:
+        spin_constants = fetch_spin_constants(SKFiles)
+        print('Spin constants enabled!')
+        spin_constants_string = '{\n      ShellResolvedSpin = Yes\n'
+        for chemSymb in chemSymbs:
+            spin_constants_string += f'      {chemSymb} {{'
+            for orbital in spin_constants[chemSymb]:
+                spin_constants_string += f'{' '.join(orbital)} '
+            spin_constants_string += '}\n'
+        spin_constants_string += '    }'
+
+        calc_dict['Hamiltonian_SpinConstants'] = spin_constants_string
+        calc_dict['Hamiltonian_ShellResolvedSCC'] = 'No'
+        calc_dict['Hamiltonian_SpinPolarisation']='Colinear{}'
 
     # run calculation through DFTB+ implemented routines
     optical = set_parallelism(optical, OMP_threads, MPI_cores, verbosity)
