@@ -322,7 +322,7 @@ def run_casida_pure(method, out_path, mol_name,
     # with peaks in hand, let's find the transitions of these peaks
     # call this function to create filtered.DAT of casida spec
     # based on given parameters "cutoff_weight" and "cutoff_OscStr"
-    read_casida(out_path, X_peaks, cutoff_OscStr, cutoff_weight, energy_upper_plot)
+    oprical.read_casida(out_path, X_peaks, cutoff_OscStr, cutoff_weight, energy_upper_plot)
 
     plt.xlim([0.0, energy_upper_plot])
     ax.set_yticklabels([])
