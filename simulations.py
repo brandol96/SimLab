@@ -295,7 +295,7 @@ def start_view(mol, mol_name, out_path, **kwargs):
             for homo_idx in target_orbitals_homo:
                 homo_list.append(H_0-homo_idx)
             for lumo_idx in target_orbitals_lumo:
-                lumo_idx.append(L_0+lumo_idx)
+                lumo_list.append(L_0+lumo_idx)
 
             orb_path = f'orbitals_DFTB_{mol_name}{os.sep}'
             
