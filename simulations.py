@@ -290,6 +290,8 @@ def start_view(mol, mol_name, out_path, **kwargs):
             #homo_list = [H_0-1, H_0]
             #lumo_list = np.arange(L_0, L_0 + i + 1, 1)
             #lumo_list = [L_0,L_0+6,L_0+7]
+            print(target_orbitals_homo, target_orbitals_lumo)
+
             homo_list = [H_0]
             lumo_list = [L_0]
             for homo_idx in target_orbitals_homo:
