@@ -50,7 +50,8 @@ def write_waveplot(path,orbitals,KPTs,WP_grid,WP_Box_View,periodic,SKfiles):
             else:
                 inp.write(line)
 
-def run(Homo, Lumo, opt_path, orb_path, homo_max_kpt, lumo_min_kpt,
+def run(Homo, homo_labels, Lumo, lumo_labels,
+        opt_path, orb_path, homo_max_kpt, lumo_min_kpt,
         WP_grid, WP_Box_View, periodic, SKfiles,
         OMP_threads,MPI_cores,verbosity):
     i = 0
@@ -61,16 +62,17 @@ def run(Homo, Lumo, opt_path, orb_path, homo_max_kpt, lumo_min_kpt,
 
     for h in Homo:
         try:
-            os.mkdir(f'{orb_path}homo-{N - i}')
+            os.mkdir(f'{orb_path}homo-{homo_labels[i]}')
         except:
             pass
         # HOMO
-        print(f'current orbital: homo-{N - i}, {h}')
-        shutil.copy(f'{opt_path}detailed.xml', f'{orb_path}homo-{N - i}{os.sep}detailed.xml')
-        shutil.copy(f'{opt_path}eigenvec.bin', f'{orb_path}homo-{N - i}{os.sep}eigenvec.bin')
-        write_waveplot(f'{orb_path}homo-{N - i}{os.sep}', h, homo_max_kpt, WP_grid, WP_Box_View, periodic,SKfiles)
+        print(f'current orbital: homo-{homo_labels[i]}, {h}')
+        shutil.copy(f'{opt_path}detailed.xml', f'{orb_path}homo-{homo_labels[i]}{os.sep}detailed.xml')
+        shutil.copy(f'{opt_path}eigenvec.bin', f'{orb_path}homo-{homo_labels[i]}{os.sep}eigenvec.bin')
+        write_waveplot(f'{orb_path}homo-{homo_labels[i]}{os.sep}', h,
+                       homo_max_kpt, WP_grid, WP_Box_View, periodic,SKfiles)
 
-        os.chdir(f'{orb_path}homo-{N - i}')
+        os.chdir(f'{orb_path}homo-{homo_labels[i]}')
         run_waveplot_parallelism(OMP_threads,MPI_cores,verbosity)
         os.chdir(current_path)
         i += 1
@@ -79,16 +81,17 @@ def run(Homo, Lumo, opt_path, orb_path, homo_max_kpt, lumo_min_kpt,
     N = len(Lumo) - 1
     for l in Lumo:
         try:
-            os.mkdir(f'{orb_path}lumo+{i}')
+            os.mkdir(f'{orb_path}lumo+{lumo_labels[i]}')
         except:
             pass
         # LUMO
-        print(f'current orbital: lumo+{i}, {l}')
-        shutil.copy(f'{opt_path}detailed.xml', f'{orb_path}lumo+{i}{os.sep}detailed.xml')
-        shutil.copy(f'{opt_path}eigenvec.bin', f'{orb_path}lumo+{i}{os.sep}eigenvec.bin')
-        write_waveplot(f'{orb_path}lumo+{i}{os.sep}', l, lumo_min_kpt, WP_grid, WP_Box_View, periodic,SKfiles)
+        print(f'current orbital: lumo+{lumo_labels[i]}, {l}')
+        shutil.copy(f'{opt_path}detailed.xml', f'{orb_path}lumo+{lumo_labels[i]}{os.sep}detailed.xml')
+        shutil.copy(f'{opt_path}eigenvec.bin', f'{orb_path}lumo+{lumo_labels[i]}{os.sep}eigenvec.bin')
+        write_waveplot(f'{orb_path}lumo+{lumo_labels[i]}{os.sep}', l,
+                       lumo_min_kpt, WP_grid, WP_Box_View, periodic,SKfiles)
 
-        os.chdir(f'{orb_path}lumo+{i}')
+        os.chdir(f'{orb_path}lumo+{lumo_labels[i]}')
         run_waveplot_parallelism(OMP_threads,MPI_cores,verbosity)
         os.chdir(current_path)
         i += 1

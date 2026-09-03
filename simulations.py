@@ -292,8 +292,8 @@ def start_view(mol, mol_name, out_path, **kwargs):
             #lumo_list = [L_0,L_0+6,L_0+7]
             print(target_orbitals_homo, target_orbitals_lumo)
 
-            homo_list = [H_0]
-            lumo_list = [L_0]
+            homo_list = []
+            lumo_list = []
             for homo_idx in target_orbitals_homo:
                 homo_list.append(H_0-homo_idx)
             for lumo_idx in target_orbitals_lumo:
@@ -312,11 +312,15 @@ def start_view(mol, mol_name, out_path, **kwargs):
             SKfiles = kwargs.get('SKFiles')
             if True in pbc:
                 periodic = True
-                orbitals.run(homo_list, lumo_list, opt_out_path, orb_path, homo_max_kpt, lumo_min_kpt,
+                orbitals.run(homo_list, target_orbitals_homo,
+                             lumo_list, target_orbitals_lumo,
+                             opt_out_path, orb_path, homo_max_kpt, lumo_min_kpt,
                              WP_grid, WP_Box_View, periodic, SKfiles,
                              OMP_threads,MPI_cores,verbosity)
             else:
                 periodic = False
-                orbitals.run(homo_list, lumo_list, opt_out_path, orb_path, homo_max_kpt, lumo_min_kpt,
+                orbitals.run(homo_list, target_orbitals_homo,
+                             lumo_list, target_orbitals_lumo,
+                             opt_out_path, orb_path, homo_max_kpt, lumo_min_kpt,
                              WP_grid, WP_Box_View, periodic, SKfiles,
                              OMP_threads,MPI_cores,verbosity)
