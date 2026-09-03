@@ -297,6 +297,7 @@ def start_view(mol, mol_name, out_path, **kwargs):
             for lumo_idx in target_orbitals_lumo:
                 lumo_list.append(L_0+lumo_idx)
 
+            print(homo_list,lumo_list)
             orb_path = f'orbitals_DFTB_{mol_name}{os.sep}'
             
             try:
