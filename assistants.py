@@ -57,7 +57,7 @@ class Cody:
             fermi_filling=kwargs.get('fermi_filling', 0.0),
             use_LennardJones=kwargs.get('use_LennardJones', False),
             SKFiles=kwargs.get('SKFiles', 'Please supply a choice!'),
-            target_orbirals=kwargs.get('target_orbirals', 0),
+            target_orbitals=kwargs.get('target_orbitals', 0),
             WP_grid=kwargs.get('WP_grid', 10),
             WP_Box_View=kwargs.get('WP_Box_View', [1,1,1]),
             write_eigens_bin=kwargs.get('write_eigens_bin',False),

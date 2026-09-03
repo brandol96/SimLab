@@ -271,7 +271,7 @@ def start_view(mol, mol_name, out_path, **kwargs):
             else:
                 opt_out_path = f'optimize_{method}_{mol_name}' + os.sep
 
-            target_orbirals = kwargs.get('target_orbirals')
+            target_orbitals = kwargs.get('target_orbitals')
             KPTs = 1
             WP_grid = kwargs.get('WP_grid')
             WP_Box_View = kwargs.get('WP_Box_View')
@@ -284,9 +284,11 @@ def start_view(mol, mol_name, out_path, **kwargs):
             H_0 = homo[1]
             L_0 = lumo[1]
 
-            i = target_orbirals
-            homo_list = np.arange(H_0 - i, H_0 + 1, 1)
-            lumo_list = np.arange(L_0, L_0 + i + 1, 1)
+            i = target_orbitals
+            #homo_list = np.arange(H_0 - i, H_0 + 1, 1)
+            homo_list = [H_0-1, H_0]
+            #lumo_list = np.arange(L_0, L_0 + i + 1, 1)
+            lumo_list = [L_0,L_0+6,L_0+7]
             orb_path = f'orbitals_DFTB_{mol_name}{os.sep}'
             
             try:
